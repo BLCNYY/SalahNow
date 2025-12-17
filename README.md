@@ -1,11 +1,15 @@
-# Waqt - Prayer Times
-
-![License](https://img.shields.io/github/license/blcnyy/waqt?style=flat-square)
-![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css)
-
-Prayer times. That's it.
+<div align="center">
+  <img src="./public/icons/icon.png" alt="Waqt Logo" width="120" height="120">
+  
+  # Waqt - Prayer Times
+  
+  ![License](https://img.shields.io/github/license/blcnyy/waqt?style=flat-square)
+  ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css)
+  
+  Prayer times. That's it.
+</div>
 
 ## 📸 Screenshots
 
