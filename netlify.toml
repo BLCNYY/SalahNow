@@ -9,4 +9,4 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NEXT_PUBLIC_APP_URL = "https://waqt.blcnyy.dev"
+  NEXT_PUBLIC_APP_URL = "https://waqt.life"

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://waqt.blcnyy.dev"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://waqt.life"),
   title: "Waqt - Prayer Times",
   description: "Beautiful prayer times app with offline support. Real-time countdowns, multi-language support, and works offline as a PWA.",
   manifest: "/manifest.json",

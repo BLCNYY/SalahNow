@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://waqt.blcnyy.dev/sitemap.xml
+Sitemap: https://waqt.life/sitemap.xml

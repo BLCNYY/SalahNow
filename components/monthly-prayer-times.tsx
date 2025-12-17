@@ -178,14 +178,14 @@ export function MonthlyPrayerTimes() {
   }, [open, handleClose])
 
   const calendarContent = open ? (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
       className="fixed inset-0 z-[100] bg-background flex flex-col"
       style={{ top: 0, left: 0, right: 0, bottom: 0 }}
-    >
+          >
             <div className="flex flex-col px-4 md:px-8 py-3 md:py-4 border-b border-border shrink-0 gap-3 max-w-6xl mx-auto w-full">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
@@ -377,7 +377,7 @@ export function MonthlyPrayerTimes() {
                 </div>
               )}
             </div>
-    </motion.div>
+          </motion.div>
   ) : null
 
   return (
