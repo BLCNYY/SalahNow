@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://waqt.life"),
   title: "Waqt - Prayer Times",
-  description: "Beautiful prayer times app with offline support. Real-time countdowns, multi-language support, and works offline as a PWA.",
+  description: "Beautiful, open-source prayer times app.",
   manifest: "/manifest.json",
   keywords: ["prayer times", "salat", "namaz", "islamic", "muslim", "adhan", "athan", "pwa", "offline"],
   authors: [{ name: "blcnyy" }],
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "Waqt",
     title: "Waqt - Prayer Times",
-    description: "Beautiful prayer times app with offline support. Real-time countdowns, multi-language support, and works offline as a PWA.",
+    description: "Beautiful, open-source prayer times app.",
     images: [
       {
         url: "/og-image.png",
@@ -39,8 +39,15 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Waqt - Prayer Times",
-    description: "Beautiful prayer times app with offline support. Real-time countdowns, multi-language support, and works offline as a PWA.",
-    images: ["/og-image.png"],
+    description: "Beautiful, open-source prayer times app.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Waqt - Prayer Times App",
+      },
+    ],
     creator: "@blcnyy",
   },
   appleWebApp: {
