@@ -1,7 +1,7 @@
 # Waqt - Prayer Times
 
 ![License](https://img.shields.io/github/license/blcnyy/waqt?style=flat-square)
-![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css)
 
@@ -30,7 +30,7 @@ Prayer times. That's it.
 - **Mobile optimized** - Responsive design that works beautifully on all devices
 - **Simple & fast** - Minimalist interface focused on what matters
 
-## 🚀 Getting Started
+## Run locally
 
 ### Prerequisites
 
@@ -56,8 +56,6 @@ npm run dev
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-**That's it!** No API keys or environment variables needed.
-
 ## 🛠️ Tech Stack
 
 - **Next.js 16** - React framework
@@ -79,17 +77,7 @@ Waqt is a Progressive Web App. After visiting the site, you can:
 - **Türkiye** - All 81 provinces with accurate prayer times provided by **T.C. Diyanet İşleri Başkanlığı**
 - **Worldwide** - Prayer times for any city worldwide via [AlAdhan API](https://aladhan.com/prayer-times-api)
 
-## 🗺️ Roadmap
-
-- [ ] **Qibla Finder** - Compass to show direction to Kaaba
-- [ ] **Notifications** - Push notifications for prayer times
-- [ ] **Widgets** - Home screen widgets for mobile
-- [ ] **More Languages** - Urdu, Indonesian, Malay
-- [ ] **Themes** - More color themes
-
-## 🤝 Contributing
-
-We welcome contributions! No setup complexity - just clone, install, and run.
+## Contribute
 
 ### Reporting Issues
 
@@ -123,7 +111,7 @@ git checkout -b fix/your-bug-fix
 4. **Make your changes**:
    - Follow the existing code style
    - Write clean, readable code
-   - Keep components simple and focused
+   - Keep components simple and focused!
 
 5. **Test your changes**:
    - Run `npm run dev` and test manually
@@ -149,7 +137,6 @@ Then open a PR on GitHub with:
 
 ### Code Style Guidelines
 
-- **No comments** - Keep code self-explanatory
 - **TypeScript** - Use types, avoid `any`
 - **Component structure** - Keep components small and focused
 - **Naming** - Use descriptive, clear names
@@ -165,13 +152,11 @@ Then open a PR on GitHub with:
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
+This project is open source and available under the [MIT License](LICENSE).
+
+Copyright (c) 2025 [Ömer Balkan](https://github.com/blcnyy)
 
 ## 🙏 Acknowledgments
 
-- Prayer times data from [Diyanet](https://diyanet.gov.tr) (Türkiye) and [AlAdhan API](https://aladhan.com) (worldwide)
+- Prayer times data from [T.C. Diyanet İşleri Başkanlığı](https://diyanet.gov.tr) (Türkiye) and [AlAdhan API](https://aladhan.com) (worldwide)
 - Icons from [Hugeicons](https://hugeicons.com)
-
----
-
-Made with simplicity in mind. Focus on prayer, not complexity.
