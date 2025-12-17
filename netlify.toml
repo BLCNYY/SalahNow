@@ -8,5 +8,5 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
   NEXT_PUBLIC_APP_URL = "https://waqt.blcnyy.dev"
