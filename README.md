@@ -40,7 +40,7 @@ Prayer times. That's it.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/waqt.git
+git clone https://github.com/blcnyy/waqt.git
 cd waqt
 ```
 
@@ -91,7 +91,7 @@ Found a bug or have a feature request? Please open an issue with:
 
 1. **Fork the repository** and clone your fork:
 ```bash
-git clone https://github.com/yourusername/waqt.git
+git clone https://github.com/blcnyy/waqt.git
 cd waqt
 ```
 
