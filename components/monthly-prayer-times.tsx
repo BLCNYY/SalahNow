@@ -9,6 +9,7 @@ import { useLocation } from "@/lib/store"
 import { fetchMonthlyPrayerTimes, DiyanetPrayerTime } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useSidebar } from "@/components/ui/sidebar"
 import { toHijri } from "hijri-converter"
 
 const LANGUAGE_LOCALES: Record<string, string> = {
@@ -90,6 +91,7 @@ type CalendarType = "gregorian" | "hijri"
 export function MonthlyPrayerTimes() {
   const { t, language } = useLanguage()
   const { currentLocation } = useLocation()
+  const { setOpenMobile } = useSidebar()
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [data, setData] = React.useState<DiyanetPrayerTime[]>([])
@@ -144,7 +146,10 @@ export function MonthlyPrayerTimes() {
         variant="ghost"
         size="sm"
         className="h-9 sm:h-8 gap-1.5 text-muted-foreground hover:text-foreground touch-manipulation px-2 sm:px-3"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpenMobile(false)
+          setOpen(true)
+        }}
       >
         <HugeiconsIcon icon={Calendar03Icon} size={16} />
         <span className="text-sm font-medium">{t.ui.calendar}</span>
