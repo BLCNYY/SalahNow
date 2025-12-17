@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Image from "next/image"
 import {
   Sidebar,
   SidebarContent,
@@ -43,12 +42,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg overflow-hidden">
-                  <Image src="/icons/icon.png" alt="Waqt" width={32} height={32} className="size-8 object-contain" priority />
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg overflow-hidden shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icons/icon.png" alt="Waqt" className="size-8 object-contain" />
                 </div>
-                <div className="flex flex-col items-center gap-0.5 leading-none">
-                  <span className="font-semibold">Waqt</span>
-                </div>
+                <span className="font-semibold group-data-[collapsible=icon]:hidden">Waqt</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

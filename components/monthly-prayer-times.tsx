@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Calendar03Icon, Cancel01Icon, Loading03Icon } from "@hugeicons/core-free-icons"
@@ -91,13 +92,19 @@ type CalendarType = "gregorian" | "hijri"
 export function MonthlyPrayerTimes() {
   const { t, language } = useLanguage()
   const { currentLocation } = useLocation()
-  const { setOpenMobile } = useSidebar()
+  const { setOpenMobile, setOpen: setSidebarOpen, open: sidebarOpen, openMobile } = useSidebar()
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [data, setData] = React.useState<DiyanetPrayerTime[]>([])
   const [error, setError] = React.useState<string | null>(null)
   const [calendarType, setCalendarType] = React.useState<CalendarType>("gregorian")
+  const [mounted, setMounted] = React.useState(false)
   const todayRef = React.useRef<HTMLDivElement>(null)
+  const sidebarWasOpenRef = React.useRef<{ mobile: boolean; desktop: boolean }>({ mobile: false, desktop: false })
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const formatDate = React.useCallback((dateStr: string) => {
     return calendarType === "hijri" 
@@ -140,30 +147,45 @@ export function MonthlyPrayerTimes() {
     }
   }, [open])
 
-  return (
-    <>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-9 sm:h-8 gap-1.5 text-muted-foreground hover:text-foreground touch-manipulation px-2 sm:px-3"
-        onClick={() => {
-          setOpenMobile(false)
-          setOpen(true)
-        }}
-      >
-        <HugeiconsIcon icon={Calendar03Icon} size={16} />
-        <span className="text-sm font-medium">{t.ui.calendar}</span>
-      </Button>
+  const handleOpen = React.useCallback(() => {
+    sidebarWasOpenRef.current = { mobile: openMobile, desktop: sidebarOpen }
+    setOpenMobile(false)
+    setSidebarOpen(false)
+    setOpen(true)
+  }, [openMobile, sidebarOpen, setOpenMobile, setSidebarOpen])
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-background flex flex-col safe-area"
-          >
+  const handleClose = React.useCallback(() => {
+    setOpen(false)
+    setTimeout(() => {
+      if (sidebarWasOpenRef.current.mobile) {
+        setOpenMobile(true)
+      }
+      if (sidebarWasOpenRef.current.desktop) {
+        setSidebarOpen(true)
+      }
+    }, 100)
+  }, [setOpenMobile, setSidebarOpen])
+
+  React.useEffect(() => {
+    if (!open) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose()
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener("keydown", handleKeyDown)
+  }, [open, handleClose])
+
+  const calendarContent = open ? (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-[100] bg-background flex flex-col"
+      style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+    >
             <div className="flex flex-col px-4 md:px-8 py-3 md:py-4 border-b border-border shrink-0 gap-3 max-w-6xl mx-auto w-full">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
@@ -171,7 +193,7 @@ export function MonthlyPrayerTimes() {
                   <span className="text-sm text-muted-foreground">{currentLocation.city}, {currentLocation.country}</span>
                 </div>
                 <button
-                  onClick={() => setOpen(false)}
+                  onClick={handleClose}
                   className="p-2 -mr-2 text-muted-foreground hover:text-foreground touch-manipulation rounded-full hover:bg-muted/50"
                 >
                   <HugeiconsIcon icon={Cancel01Icon} size={24} />
@@ -355,9 +377,25 @@ export function MonthlyPrayerTimes() {
                 </div>
               )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    </motion.div>
+  ) : null
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-9 sm:h-8 gap-1.5 text-muted-foreground hover:text-foreground touch-manipulation px-2 sm:px-3"
+        onClick={handleOpen}
+      >
+        <HugeiconsIcon icon={Calendar03Icon} size={16} />
+        <span className="text-sm font-medium">{t.ui.calendar}</span>
+      </Button>
+
+      {mounted && createPortal(
+        <AnimatePresence>{calendarContent}</AnimatePresence>,
+        document.body
+      )}
     </>
   )
 }
