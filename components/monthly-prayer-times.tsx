@@ -54,8 +54,12 @@ function isToday(dateStr: string): boolean {
   return date.toDateString() === today.toDateString()
 }
 
-function getDayNumber(dateStr: string): string {
-  const [day] = dateStr.split(".")
+function getDayNumber(dateStr: string, calendarType: "gregorian" | "hijri" = "gregorian"): string {
+  const [day, month, year] = dateStr.split(".")
+  if (calendarType === "hijri") {
+    const hijri = toHijri(parseInt(year), parseInt(month), parseInt(day))
+    return hijri.hd.toString()
+  }
   return day
 }
 
@@ -279,7 +283,7 @@ export function MonthlyPrayerTimes() {
                                   "flex flex-col items-center justify-center w-12 h-12 rounded-lg",
                                   isTodayRow ? "bg-primary text-primary-foreground" : "bg-muted"
                                 )}>
-                                  <span className="text-lg font-bold leading-none">{getDayNumber(day.MiladiTarihKisa)}</span>
+                                  <span className="text-lg font-bold leading-none">{getDayNumber(day.MiladiTarihKisa, calendarType)}</span>
                                   <span className="text-[10px] uppercase opacity-80">{getWeekday(day.MiladiTarihKisa, language)}</span>
                                 </div>
                                 {isTodayRow && (
@@ -331,7 +335,7 @@ export function MonthlyPrayerTimes() {
                                 "flex flex-col items-center justify-center w-12 h-12 rounded-lg",
                                 isTodayRow ? "bg-primary text-primary-foreground" : "bg-muted"
                               )}>
-                                <span className="text-lg font-bold leading-none">{getDayNumber(day.MiladiTarihKisa)}</span>
+                                <span className="text-lg font-bold leading-none">{getDayNumber(day.MiladiTarihKisa, calendarType)}</span>
                                 <span className="text-[10px] uppercase opacity-80">{getWeekday(day.MiladiTarihKisa, language)}</span>
                               </div>
                               <div className="flex flex-col">
