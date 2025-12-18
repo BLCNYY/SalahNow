@@ -50,7 +50,7 @@ interface CachedPrayerData {
   location: string
 }
 
-const CACHE_KEY = "waqt-prayer-cache"
+const CACHE_KEY = "salahnow-prayer-cache"
 const ALADHAN_BASE_URL = "https://api.aladhan.com/v1"
 
 function getCacheKey(location: Location): string {

@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="./public/icons/icon.png" alt="Waqt Logo" width="120" height="120">
+  <img src="./public/icons/icon.png" alt="Salah[Now] Logo" width="120" height="120">
   
-# Waqt
+# Salah[Now]
 
 Prayer times. That's it.
 
-![License](https://img.shields.io/github/license/blcnyy/waqt?style=flat-square)
+![License](https://img.shields.io/github/license/blcnyy/salahnow?style=flat-square)
   ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css)
@@ -44,8 +44,8 @@ Prayer times. That's it.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/blcnyy/waqt.git
-cd waqt
+git clone https://github.com/blcnyy/salahnow.git
+cd salahnow
 ```
 
 2. Install dependencies:
@@ -71,7 +71,7 @@ npm run dev
 
 ## 📱 PWA Support
 
-Waqt is a Progressive Web App. After visiting the site, you can:
+Salah[Now] is a Progressive Web App. After visiting the site, you can:
 - Install it on your device (mobile or desktop)
 - Use it offline after the initial load
 - Access prayer times without an internet connection
@@ -95,8 +95,8 @@ Found a bug or have a feature request? Please open an issue with:
 
 1. **Fork the repository** and clone your fork:
 ```bash
-git clone https://github.com/blcnyy/waqt.git
-cd waqt
+git clone https://github.com/blcnyy/salahnow.git
+cd salahnow
 ```
 
 2. **Install and run**:

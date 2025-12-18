@@ -44,9 +44,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <a href="#">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg overflow-hidden shrink-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/icons/icon.png" alt="Waqt" className="size-8 object-contain" />
+                  <img src="/icons/icon.png" alt="Salah[Now]" className="size-8 object-contain" />
                 </div>
-                <span className="font-semibold group-data-[collapsible=icon]:hidden">Waqt</span>
+                <span className="font-semibold group-data-[collapsible=icon]:hidden">Salah[Now]</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Location, DEFAULT_LOCATION, findNearestLocation } from "./types"
 
-const FAVORITES_KEY = "waqt-favorites"
+const FAVORITES_KEY = "salahnow-favorites"
 
 export interface LocationState {
   currentLocation: Location

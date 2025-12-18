@@ -13,39 +13,39 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://waqt.life"),
-  title: "Waqt - Prayer Times",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://salahnow.app"),
+  title: "Salah[Now] - Prayer Times",
   description: "Beautiful, open-source prayer times app.",
   manifest: "/manifest.json",
-  keywords: ["prayer times", "salat", "namaz", "islamic", "muslim", "adhan", "athan", "pwa", "offline"],
+  keywords: ["prayer times", "salat", "namaz", "islamic", "muslim", "adhan", "athan", "pwa", "offline", "salah"],
   authors: [{ name: "blcnyy" }],
   creator: "blcnyy",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "/",
-    siteName: "Waqt",
-    title: "Waqt - Prayer Times",
+    siteName: "Salah[Now]",
+    title: "Salah[Now] - Prayer Times",
     description: "Beautiful, open-source prayer times app.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Waqt - Prayer Times App",
+        alt: "Salah[Now] - Prayer Times App",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Waqt - Prayer Times",
+    title: "Salah[Now] - Prayer Times",
     description: "Beautiful, open-source prayer times app.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Waqt - Prayer Times App",
+        alt: "Salah[Now] - Prayer Times App",
       },
     ],
     creator: "@blcnyy",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Waqt",
+    title: "Salah[Now]",
   },
   formatDetection: {
     telephone: false,

@@ -1,5 +1,5 @@
-const CACHE_NAME = 'waqt-v1'
-const PRAYER_CACHE = 'waqt-prayer-times-v1'
+const CACHE_NAME = 'salahnow-v1'
+const PRAYER_CACHE = 'salahnow-prayer-times-v1'
 
 const STATIC_ASSETS = [
   '/',

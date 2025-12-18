@@ -44,7 +44,7 @@ netlify deploy --prod
 In Netlify dashboard:
 1. Go to **Domain settings** → **Custom domains**
 2. Click **"Add custom domain"**
-3. Enter `waqt.life`
+3. Enter `salahnow.app`
 4. Netlify will show DNS records to add
 
 In your DNS provider (where `blcnyy.dev` is hosted):
@@ -63,12 +63,12 @@ SSL usually activates within minutes of DNS propagation.
 ### 5. Verify Environment Variable
 
 Check **Site settings** → **Environment variables**:
-- Should see `NEXT_PUBLIC_APP_URL` = `https://waqt.life` (from `netlify.toml`)
+- Should see `NEXT_PUBLIC_APP_URL` = `https://salahnow.app` (from `netlify.toml`)
 - If you want to override it, add it manually here
 
 ## Verify Deployment
 
-- ✅ Visit `https://waqt.life`
+- ✅ Visit `https://salahnow.app`
 - ✅ Test offline: Turn off wifi, refresh page
 - ✅ Test PWA: Click "Install" in browser
 - ✅ Test sharing: Share link on Twitter/Discord (check preview)
@@ -81,7 +81,7 @@ Check **Site settings** → **Environment variables**:
 
 1. Go to [vercel.com](https://vercel.com)
 2. Import GitHub repository
-3. Add env var: `NEXT_PUBLIC_APP_URL=https://waqt.life`
+3. Add env var: `NEXT_PUBLIC_APP_URL=https://salahnow.app`
 4. Deploy
 
 ### Cloudflare Pages
@@ -116,7 +116,7 @@ pm2 start npm --name "waqt" -- start
 ### DNS Propagation
 
 - Custom domain may take 5-60 minutes to propagate
-- Check status: `dig waqt.life`
+- Check status: `dig salahnow.app`
 
 ### SSL Certificate
 

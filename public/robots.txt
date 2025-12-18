@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://waqt.life/sitemap.xml
+Sitemap: https://salahnow.app/sitemap.xml

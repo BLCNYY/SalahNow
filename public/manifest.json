@@ -1,7 +1,7 @@
 {
-  "name": "Waqt - Prayer Times",
-  "short_name": "Waqt",
-  "description": "Beautiful prayer times app with offline support",
+  "name": "Salah[Now] - Prayer Times",
+  "short_name": "Salah[Now]",
+  "description": "Beautiful, open-source prayer times app.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
