@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+description: Standard issue templates for Salah[Now]
+contact_links:
+  - name: Documentation
+    url: https://github.com/blcnyy/salahnow#readme
+    about: Review the README for setup and contribution guidance before opening an issue.
