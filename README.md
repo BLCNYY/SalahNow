@@ -83,6 +83,8 @@ Salah[Now] is a Progressive Web App. After visiting the site, you can:
 
 ## Contribute
 
+Read the [Code of Conduct](./CODE_OF_CONDUCT.md) to understand community expectations and the [Contributing Guide](./CONTRIBUTING.md) for setup and workflow tips.
+
 ### Reporting Issues
 
 Found a bug or have a feature request? Please open an issue with:
@@ -118,10 +120,14 @@ git checkout -b fix/your-bug-fix
    - Keep components simple and focused!
 
 5. **Test your changes**:
-   - Run `npm run dev` and test manually
-   - Ensure the app works on mobile and desktop
-   - Test offline functionality if relevant
-   - Check that translations work for all languages
+- Run `npm run dev` and test manually
+- Ensure the app works on mobile and desktop
+- Test offline functionality if relevant
+- Check that translations work for all languages
+
+### Security
+
+Please review the [Security Policy](./SECURITY.md) for how to report vulnerabilities.
 
 6. **Commit your changes**:
 ```bash
