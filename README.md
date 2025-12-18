@@ -16,12 +16,12 @@ Prayer times. That's it.
 ### Desktop
 | | |
 |:---:|:---:|
-| ![Desktop Screenshot 1](./screenshots/waqt-screenshot-desktop-01.png) | ![Desktop Screenshot 2](./screenshots/waqt-screenshot-desktop-02.png) |
+| ![Desktop Screenshot 1](./screenshots/salahnow-screenshot-desktop-01.png) | ![Desktop Screenshot 2](./screenshots/salahnow-screenshot-desktop-02.png) |
 
 ### Mobile
 | | |
 |:---:|:---:|
-| ![Mobile Screenshot 1](./screenshots/waqt-screenshot-mobile-01.png) | ![Mobile Screenshot 2](./screenshots/waqt-screenshot-mobile-02.png) |
+| ![Mobile Screenshot 1](./screenshots/salahnow-screenshot-mobile-01.png) | ![Mobile Screenshot 2](./screenshots/salahnow-screenshot-mobile-02.png) |
 
 ## Features
 
