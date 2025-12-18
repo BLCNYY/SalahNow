@@ -5,7 +5,7 @@
 
 Prayer times. That's it.
 
-![License](https://img.shields.io/github/license/blcnyy/salahnow?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
   ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css)
