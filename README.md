@@ -83,76 +83,25 @@ Salah[Now] is a Progressive Web App. After visiting the site, you can:
 
 ## Contribute
 
-### Reporting Issues
+Please read the [Contributing guide](CONTRIBUTING.md) for setup steps, pull request expectations, and coding standards. By participating you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-Found a bug or have a feature request? Please open an issue with:
-- Clear description of the problem or feature
-- Steps to reproduce (for bugs)
-- Expected vs actual behavior
-- Screenshots if applicable
+### Reporting issues
 
-### Making Changes
+- Share a clear description of the problem or feature
+- Include reproduction steps and expected versus actual behavior
+- Attach screenshots or recordings when helpful
 
-1. **Fork the repository** and clone your fork:
-```bash
-git clone https://github.com/blcnyy/salahnow.git
-cd salahnow
-```
+### Areas for contribution
 
-2. **Install and run**:
-```bash
-npm install
-npm run dev
-```
+- Translations and new language support
+- UI and accessibility improvements
+- Performance and offline reliability
+- Bug fixes and regression tests
+- Documentation updates
 
-3. **Create a branch** for your changes:
-```bash
-git checkout -b feature/your-feature-name
-# or
-git checkout -b fix/your-bug-fix
-```
+### Security
 
-4. **Make your changes**:
-   - Follow the existing code style
-   - Write clean, readable code
-   - Keep components simple and focused!
-
-5. **Test your changes**:
-   - Run `npm run dev` and test manually
-   - Ensure the app works on mobile and desktop
-   - Test offline functionality if relevant
-   - Check that translations work for all languages
-
-6. **Commit your changes**:
-```bash
-git add .
-git commit -m "Add: description of your changes"
-```
-
-7. **Push and create a Pull Request**:
-```bash
-git push origin feature/your-feature-name
-```
-
-Then open a PR on GitHub with:
-- Clear description of what changed
-- Why the change was made
-- Any relevant screenshots
-
-### Code Style Guidelines
-
-- **TypeScript** - Use types, avoid `any`
-- **Component structure** - Keep components small and focused
-- **Naming** - Use descriptive, clear names
-- **Formatting** - Follow existing patterns
-
-### Areas for Contribution
-
-- **Translations** - Add or improve translations for existing languages
-- **New languages** - Add support for additional languages
-- **UI improvements** - Enhance mobile experience or accessibility
-- **Performance** - Optimize loading times or bundle size
-- **Bug fixes** - Fix issues reported in GitHub Issues
+Please review the [Security Policy](SECURITY.md) for responsible disclosure instructions.
 
 ## 📄 License
 
