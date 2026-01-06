@@ -4,6 +4,13 @@ import * as React from "react"
 import { Location, DEFAULT_LOCATION, findNearestLocation } from "./types"
 
 const FAVORITES_KEY = "salahnow-favorites"
+const LOCATION_STORAGE_KEY = "salahnow-location"
+const LOCATION_STORAGE_DURATION_MS = 30 * 24 * 60 * 60 * 1000
+
+type StoredLocation = {
+  location: Location
+  storedAt: number
+}
 
 export interface LocationState {
   currentLocation: Location
@@ -45,6 +52,26 @@ function saveFavorites(favorites: Location[]) {
   }
 }
 
+function loadStoredLocation(): StoredLocation | null {
+  if (typeof window === "undefined") return null
+  try {
+    const stored = localStorage.getItem(LOCATION_STORAGE_KEY)
+    return stored ? JSON.parse(stored) : null
+  } catch {
+    return null
+  }
+}
+
+function saveStoredLocation(location: Location) {
+  if (typeof window === "undefined") return
+  try {
+    const payload: StoredLocation = { location, storedAt: Date.now() }
+    localStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify(payload))
+  } catch {
+    console.error("Failed to save location")
+  }
+}
+
 export function LocationProvider({ children }: { children: React.ReactNode }) {
   const [currentLocation, setCurrentLocation] = React.useState<Location>(DEFAULT_LOCATION)
   const [favorites, setFavorites] = React.useState<Location[]>([])
@@ -55,12 +82,24 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
     const loaded = loadFavorites()
     setFavorites(loaded)
 
+    const storedLocation = loadStoredLocation()
+    if (
+      storedLocation &&
+      Date.now() - storedLocation.storedAt < LOCATION_STORAGE_DURATION_MS
+    ) {
+      setCurrentLocation(storedLocation.location)
+      setDetectedCountryCode(storedLocation.location.countryCode)
+      setIsHydrated(true)
+      return
+    }
+
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const nearest = findNearestLocation(position.coords.latitude, position.coords.longitude)
           setCurrentLocation(nearest)
           setDetectedCountryCode(nearest.countryCode)
+          saveStoredLocation(nearest)
           setIsHydrated(true)
         },
         () => {
@@ -69,7 +108,7 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
         { timeout: 10000, maximumAge: 300000 }
       )
     } else {
-    setIsHydrated(true)
+      setIsHydrated(true)
     }
   }, [])
 
@@ -139,4 +178,3 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
 
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>
 }
-
