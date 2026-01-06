@@ -50,6 +50,7 @@ type TranslationKeys = {
     gregorian: string
     hijri: string
     calendar: string
+    localTime: string
   }
 }
 
@@ -84,6 +85,7 @@ export const translations: Record<Language, TranslationKeys> = {
       gregorian: "Gregorian",
       hijri: "Hijri",
       calendar: "Calendar",
+      localTime: "Local Time",
     },
   },
   tr: {
@@ -116,6 +118,7 @@ export const translations: Record<Language, TranslationKeys> = {
       gregorian: "Miladi",
       hijri: "Hicri",
       calendar: "Takvim",
+      localTime: "Yerel Saat",
     },
   },
   ar: {
@@ -148,6 +151,7 @@ export const translations: Record<Language, TranslationKeys> = {
       gregorian: "ميلادي",
       hijri: "هجري",
       calendar: "التقويم",
+      localTime: "الوقت المحلي",
     },
   },
   de: {
@@ -180,6 +184,7 @@ export const translations: Record<Language, TranslationKeys> = {
       gregorian: "Gregorianisch",
       hijri: "Hidschri",
       calendar: "Kalender",
+      localTime: "Ortszeit",
     },
   },
   fr: {
@@ -212,6 +217,7 @@ export const translations: Record<Language, TranslationKeys> = {
       gregorian: "Grégorien",
       hijri: "Hijri",
       calendar: "Calendrier",
+      localTime: "Heure locale",
     },
   },
 }

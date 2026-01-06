@@ -20,6 +20,9 @@ interface PrayerTimesState {
   nextPrayer: PrayerName
   countdown: string
   prayerList: PrayerListItem[]
+  timeZone: string | null
+  localTime: string
+  showLocalTime: boolean
 }
 
 export function usePrayerTimes(location: Location) {
@@ -31,6 +34,20 @@ export function usePrayerTimes(location: Location) {
   const [currentPrayer, setCurrentPrayer] = React.useState<PrayerName | null>(null)
   const [nextPrayer, setNextPrayer] = React.useState<PrayerName>("Fajr")
   const [prayerList, setPrayerList] = React.useState<PrayerListItem[]>([])
+  const [timeZone, setTimeZone] = React.useState<string | null>(null)
+  const [localTime, setLocalTime] = React.useState("")
+  const [showLocalTime, setShowLocalTime] = React.useState(false)
+
+  const userTimeZone = React.useMemo(() => Intl.DateTimeFormat().resolvedOptions().timeZone, [])
+
+  const formatLocalTime = React.useCallback((zone: string) => {
+    return new Intl.DateTimeFormat(undefined, {
+      timeZone: zone,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }).format(new Date())
+  }, [])
 
   React.useEffect(() => {
     let isMounted = true
@@ -45,7 +62,8 @@ export function usePrayerTimes(location: Location) {
         ])
 
         if (isMounted) {
-          setPrayerTimes(times)
+          setPrayerTimes(times.times)
+          setTimeZone(times.timeZone)
           setTomorrowFajr(tomorrow)
           setLoading(false)
         }
@@ -68,7 +86,7 @@ export function usePrayerTimes(location: Location) {
     if (!prayerTimes) return
 
     function updateCountdown() {
-      const info = getCurrentPrayerInfo(prayerTimes!, tomorrowFajr || undefined)
+      const info = getCurrentPrayerInfo(prayerTimes!, tomorrowFajr || undefined, timeZone || undefined)
       setCountdown(formatCountdown(info.timeUntilNext))
       setCurrentPrayer(info.currentPrayer)
       setNextPrayer(info.nextPrayer)
@@ -80,13 +98,21 @@ export function usePrayerTimes(location: Location) {
         time: prayerTimes![name],
         isActive: !isSunriseWindow && info.currentPrayer === name,
       })))
+
+      if (timeZone && userTimeZone) {
+        setLocalTime(formatLocalTime(timeZone))
+        setShowLocalTime(timeZone !== userTimeZone)
+      } else {
+        setLocalTime("")
+        setShowLocalTime(false)
+      }
     }
 
     updateCountdown()
     const interval = setInterval(updateCountdown, 1000)
 
     return () => clearInterval(interval)
-  }, [prayerTimes, tomorrowFajr])
+  }, [prayerTimes, tomorrowFajr, timeZone, userTimeZone, formatLocalTime])
 
   return {
     prayerTimes,
@@ -97,5 +123,8 @@ export function usePrayerTimes(location: Location) {
     nextPrayer,
     countdown,
     prayerList,
+    timeZone,
+    localTime,
+    showLocalTime,
   } as PrayerTimesState
 }
