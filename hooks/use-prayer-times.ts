@@ -72,11 +72,13 @@ export function usePrayerTimes(location: Location) {
       setCountdown(formatCountdown(info.timeUntilNext))
       setCurrentPrayer(info.currentPrayer)
       setNextPrayer(info.nextPrayer)
+
+      const isSunriseWindow = info.currentPrayer === "Sunrise"
       
       setPrayerList(PRAYER_NAMES.map((name) => ({
         name,
         time: prayerTimes![name],
-        isActive: info.currentPrayer === name,
+        isActive: !isSunriseWindow && info.currentPrayer === name,
       })))
     }
 
