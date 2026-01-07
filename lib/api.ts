@@ -14,6 +14,9 @@ interface AlAdhanResponse {
   status: string
   data: {
     timings: AlAdhanTimings
+    meta?: {
+      timezone?: string
+    }
   }
 }
 
@@ -48,6 +51,7 @@ interface CachedPrayerData {
   tomorrowFajr: string
   date: string
   location: string
+  timeZone?: string | null
 }
 
 const CACHE_KEY = "salahnow-prayer-cache"
@@ -78,7 +82,7 @@ function getCachedData(location: Location): CachedPrayerData | null {
   }
 }
 
-function setCachedData(location: Location, times: PrayerTimes, tomorrowFajr: string): void {
+function setCachedData(location: Location, times: PrayerTimes, tomorrowFajr: string, timeZone: string | null): void {
   if (typeof window === "undefined") return
   try {
     const cached = localStorage.getItem(CACHE_KEY)
@@ -89,6 +93,7 @@ function setCachedData(location: Location, times: PrayerTimes, tomorrowFajr: str
       tomorrowFajr,
       date: getTodayDateString(),
       location: key,
+      timeZone,
     }
     localStorage.setItem(CACHE_KEY, JSON.stringify(data))
   } catch {
@@ -158,7 +163,7 @@ async function fetchTomorrowFajrFromDiyanet(ilceId: string): Promise<string> {
   return tomorrowTimes.Imsak
 }
 
-async function fetchPrayerTimesFromAlAdhan(location: Location): Promise<PrayerTimes> {
+async function fetchPrayerTimesFromAlAdhan(location: Location): Promise<{ times: PrayerTimes; timeZone: string | null }> {
   const today = new Date()
   const timestamp = Math.floor(today.getTime() / 1000)
   const url = `${ALADHAN_BASE_URL}/timings/${timestamp}?latitude=${location.lat}&longitude=${location.lon}&method=3&school=1`
@@ -173,12 +178,15 @@ async function fetchPrayerTimesFromAlAdhan(location: Location): Promise<PrayerTi
   const times = data.data.timings
 
   return {
-    Fajr: formatTimeToHHMM(times.Fajr),
-    Sunrise: formatTimeToHHMM(times.Sunrise),
-    Dhuhr: formatTimeToHHMM(times.Dhuhr),
-    Asr: formatTimeToHHMM(times.Asr),
-    Maghrib: formatTimeToHHMM(times.Maghrib),
-    Isha: formatTimeToHHMM(times.Isha),
+    times: {
+      Fajr: formatTimeToHHMM(times.Fajr),
+      Sunrise: formatTimeToHHMM(times.Sunrise),
+      Dhuhr: formatTimeToHHMM(times.Dhuhr),
+      Asr: formatTimeToHHMM(times.Asr),
+      Maghrib: formatTimeToHHMM(times.Maghrib),
+      Isha: formatTimeToHHMM(times.Isha),
+    },
+    timeZone: data.data.meta?.timezone ?? null,
   }
 }
 
@@ -198,30 +206,34 @@ async function fetchTomorrowFajrFromAlAdhan(location: Location): Promise<string>
   return formatTimeToHHMM(data.data.timings.Fajr)
 }
 
-export async function fetchPrayerTimes(location: Location): Promise<PrayerTimes> {
+export async function fetchPrayerTimes(location: Location): Promise<{ times: PrayerTimes; timeZone: string | null }> {
   const cached = getCachedData(location)
   if (cached) {
-    return cached.times
+    return { times: cached.times, timeZone: cached.timeZone ?? null }
   }
 
   try {
     let times: PrayerTimes
     let tomorrowFajr: string
+    let timeZone: string | null = null
 
-  if (location.diyanetIlceId) {
+    if (location.diyanetIlceId) {
       times = await fetchPrayerTimesFromDiyanet(location.diyanetIlceId)
       tomorrowFajr = await fetchTomorrowFajrFromDiyanet(location.diyanetIlceId)
+      timeZone = "Europe/Istanbul"
     } else {
-      times = await fetchPrayerTimesFromAlAdhan(location)
+      const result = await fetchPrayerTimesFromAlAdhan(location)
+      times = result.times
+      timeZone = result.timeZone
       tomorrowFajr = await fetchTomorrowFajrFromAlAdhan(location)
     }
 
-    setCachedData(location, times, tomorrowFajr)
-    return times
+    setCachedData(location, times, tomorrowFajr, timeZone)
+    return { times, timeZone }
   } catch (error) {
     const staleCache = getCachedData(location)
     if (staleCache) {
-      return staleCache.times
+      return { times: staleCache.times, timeZone: staleCache.timeZone ?? null }
     }
     throw error
   }

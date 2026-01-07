@@ -1,5 +1,29 @@
 import { PrayerTimes, PrayerTime, PRAYER_NAMES, PrayerName } from "./types"
 
+export function getTimeZoneDate(timeZone: string, baseDate: Date = new Date()): Date {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  })
+    .formatToParts(baseDate)
+    .reduce((acc, part) => {
+      if (part.type !== "literal") {
+        acc[part.type] = part.value
+      }
+      return acc
+    }, {} as Record<string, string>)
+
+  return new Date(
+    `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}`
+  )
+}
+
 export function timeStringToDate(timeStr: string, baseDate: Date = new Date()): Date {
   const [hours, minutes] = timeStr.split(":").map(Number)
   const date = new Date(baseDate)
@@ -25,11 +49,12 @@ export interface CurrentPrayerInfo {
 
 export function getCurrentPrayerInfo(
   prayerTimes: PrayerTimes,
-  tomorrowFajr?: string
+  tomorrowFajr?: string,
+  timeZone?: string
 ): CurrentPrayerInfo {
-  const now = new Date()
+  const now = timeZone ? getTimeZoneDate(timeZone) : new Date()
   const currentTime = now.getTime()
-  const prayers = getPrayerTimesArray(prayerTimes)
+  const prayers = getPrayerTimesArray(prayerTimes, now)
 
   let currentPrayer: PrayerName | null = null
   let nextPrayer: PrayerName = "Fajr"
@@ -98,4 +123,3 @@ export function formatCountdown(ms: number): string {
 export function isCurrentInterval(prayerName: PrayerName, currentPrayer: PrayerName | null): boolean {
   return currentPrayer === prayerName
 }
-

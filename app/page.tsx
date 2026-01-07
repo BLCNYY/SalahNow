@@ -33,7 +33,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 
 function PrayerTimesDisplay() {
   const { currentLocation, setLocation, isFavorite, toggleFavorite, detectedCountryCode } = useLocation()
-  const { loading, error, countdown, nextPrayer, prayerList } = usePrayerTimes(currentLocation)
+  const { loading, error, countdown, nextPrayer, prayerList, localTime, showLocalTime } = usePrayerTimes(currentLocation)
   const { t, initializeFromCountry, language } = useLanguage()
   const isMobile = useIsMobile()
 
@@ -208,6 +208,11 @@ function PrayerTimesDisplay() {
                 <div className="text-muted-foreground text-xl sm:text-sm tracking-widest uppercase">
                   <span>{countdownText}</span>
                 </div>
+                {showLocalTime && localTime ? (
+                  <div className="text-muted-foreground text-xs sm:text-[10px] tracking-[0.2em] uppercase">
+                    {t.ui.localTime}: <span className="tabular-nums">{localTime}</span>
+                  </div>
+                ) : null}
 
                 <div className="relative">
                   <h1 className="text-[15vw] sm:text-[10vw] md:text-[8vw] font-bold leading-none tracking-tighter text-foreground tabular-nums select-none">
