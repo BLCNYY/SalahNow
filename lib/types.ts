@@ -4,6 +4,7 @@ export interface Location {
   countryCode: string
   lat: number
   lon: number
+  addressLabel?: string
   diyanetIlceId?: string
 }
 

@@ -3,7 +3,7 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Globe02Icon, Location01Icon, StarIcon, Loading03Icon } from "@hugeicons/core-free-icons"
+import { StarIcon, Loading03Icon } from "@hugeicons/core-free-icons"
 
 import { AppSidebar } from "@/components/app-sidebar"
 import {
@@ -13,52 +13,20 @@ import {
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { MobileSelect } from "@/components/mobile-select"
-import { PopupSelect } from "@/components/popup-select"
+import { LocationSwitcher } from "@/components/location-switcher"
 import { LanguageSelector } from "@/components/language-selector"
 import { MonthlyPrayerTimes } from "@/components/monthly-prayer-times"
-import { CustomLocationModal } from "@/components/custom-location-modal"
 import { cn } from "@/lib/utils"
 import { LocationProvider, useLocation } from "@/lib/store"
 import { LanguageProvider, useLanguage } from "@/lib/language-store"
-import { COUNTRIES_LIST, getCitiesByCountry, PrayerName } from "@/lib/types"
+import { PrayerName } from "@/lib/types"
 import { getCountdownText } from "@/lib/i18n"
 import { usePrayerTimes } from "@/hooks/use-prayer-times"
-import { useIsMobile } from "@/hooks/use-mobile"
 
 function PrayerTimesDisplay() {
-  const { currentLocation, setLocation, isFavorite, toggleFavorite, detectedCountryCode } = useLocation()
+  const { currentLocation, isFavorite, toggleFavorite, detectedCountryCode } = useLocation()
   const { loading, error, countdown, nextPrayer, prayerList, localTime, showLocalTime } = usePrayerTimes(currentLocation)
   const { t, initializeFromCountry, language } = useLanguage()
-  const isMobile = useIsMobile()
-
-  const [selectedCountry, setSelectedCountry] = React.useState(currentLocation.countryCode)
-  const cities = React.useMemo(() => getCitiesByCountry(selectedCountry), [selectedCountry])
-
-  const countryOptions = React.useMemo(() => {
-    const options = COUNTRIES_LIST.map((c) => ({ value: c.countryCode, label: c.country }))
-    const hasCurrent = options.some((option) => option.value === currentLocation.countryCode)
-    if (!hasCurrent) {
-      options.unshift({ value: currentLocation.countryCode, label: currentLocation.country })
-    }
-    return options
-  }, [currentLocation.country, currentLocation.countryCode])
-
-  const cityOptions = React.useMemo(() => {
-    const options = cities.map((c) => ({ value: c.city, label: c.city }))
-    const hasCurrent = options.some((option) => option.value === currentLocation.city)
-    if (!hasCurrent) {
-      options.unshift({ value: currentLocation.city, label: currentLocation.city })
-    }
-    return options
-  }, [cities, currentLocation.city])
-
-  React.useEffect(() => {
-    const hasCountry = COUNTRIES_LIST.some((c) => c.countryCode === currentLocation.countryCode)
-    if (hasCountry) {
-      setSelectedCountry(currentLocation.countryCode)
-    }
-  }, [currentLocation.countryCode])
 
   React.useEffect(() => {
     if (detectedCountryCode) {
@@ -72,21 +40,6 @@ function PrayerTimesDisplay() {
     return getCountdownText(language, translatedNextPrayer)
   }, [language, translatedNextPrayer])
 
-  const handleCountryChange = (countryCode: string) => {
-    setSelectedCountry(countryCode)
-    const newCities = getCitiesByCountry(countryCode)
-    if (newCities.length > 0) {
-      setLocation(newCities[0])
-    }
-  }
-
-  const handleCityChange = (city: string) => {
-    const location = cities.find((c) => c.city === city)
-    if (location) {
-      setLocation(location)
-    }
-  }
-
   const currentIsFavorite = isFavorite(currentLocation)
 
   return (
@@ -99,47 +52,7 @@ function PrayerTimesDisplay() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-1 sm:gap-4">
-          {isMobile ? (
-            <>
-              <MobileSelect
-                value={selectedCountry}
-                onValueChange={handleCountryChange}
-                options={countryOptions}
-                placeholder={t.ui.country}
-                title={t.ui.selectCountry}
-                icon={<HugeiconsIcon icon={Globe02Icon} size={16} className="shrink-0" />}
-              />
-              <MobileSelect
-                value={currentLocation.city}
-                onValueChange={handleCityChange}
-                options={cityOptions}
-                placeholder={t.ui.city}
-                title={t.ui.selectCity}
-                icon={<HugeiconsIcon icon={Location01Icon} size={16} className="shrink-0" />}
-              />
-            </>
-          ) : (
-            <>
-              <PopupSelect
-                value={selectedCountry}
-                onValueChange={handleCountryChange}
-                options={countryOptions}
-                placeholder={t.ui.country}
-                title={t.ui.selectCountry}
-                icon={<HugeiconsIcon icon={Globe02Icon} size={16} className="shrink-0" />}
-              />
-              <PopupSelect
-                value={currentLocation.city}
-                onValueChange={handleCityChange}
-                options={cityOptions}
-                placeholder={t.ui.city}
-                title={t.ui.selectCity}
-                icon={<HugeiconsIcon icon={Location01Icon} size={16} className="shrink-0" />}
-              />
-            </>
-          )}
-
-          <CustomLocationModal />
+          <LocationSwitcher />
 
           <Button
             variant="ghost"

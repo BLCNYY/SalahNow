@@ -51,6 +51,7 @@ type TranslationKeys = {
     hijri: string
     calendar: string
     localTime: string
+    location: string
     addCustomLocation: string
     customLocationTitle: string
     customLocationSubtitle: string
@@ -77,6 +78,12 @@ type TranslationKeys = {
     searchMethod: string
     manualMethod: string
     addressSuggestions: string
+    searchingLocations: string
+    locationsTab: string
+    customLocationsTab: string
+    addCustomLocationAction: string
+    selected: string
+    noCustomLocations: string
   }
 }
 
@@ -112,6 +119,7 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "Hijri",
       calendar: "Calendar",
       localTime: "Local Time",
+      location: "Location",
       addCustomLocation: "Add Custom Location",
       customLocationTitle: "Custom Location",
       customLocationSubtitle: "Enter an address or coordinates to check availability.",
@@ -138,6 +146,12 @@ export const translations: Record<Language, TranslationKeys> = {
       searchMethod: "Search",
       manualMethod: "Manual",
       addressSuggestions: "Suggested locations",
+      searchingLocations: "Searching locations...",
+      locationsTab: "Locations",
+      customLocationsTab: "Custom Locations",
+      addCustomLocationAction: "Add Custom Location",
+      selected: "Selected",
+      noCustomLocations: "No custom locations yet.",
     },
   },
   tr: {
@@ -171,6 +185,7 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "Hicri",
       calendar: "Takvim",
       localTime: "Yerel Saat",
+      location: "Konum",
       addCustomLocation: "Özel Konum Ekle",
       customLocationTitle: "Özel Konum",
       customLocationSubtitle: "Uygunluğu kontrol etmek için adres veya koordinat girin.",
@@ -197,6 +212,12 @@ export const translations: Record<Language, TranslationKeys> = {
       searchMethod: "Ara",
       manualMethod: "Manuel",
       addressSuggestions: "Önerilen konumlar",
+      searchingLocations: "Konumlar aranıyor...",
+      locationsTab: "Konumlar",
+      customLocationsTab: "Özel Konumlar",
+      addCustomLocationAction: "Özel Konum Ekle",
+      selected: "Seçili",
+      noCustomLocations: "Henüz özel konum yok.",
     },
   },
   ar: {
@@ -230,6 +251,7 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "هجري",
       calendar: "التقويم",
       localTime: "الوقت المحلي",
+      location: "الموقع",
       addCustomLocation: "إضافة موقع مخصص",
       customLocationTitle: "موقع مخصص",
       customLocationSubtitle: "أدخل عنوانًا أو إحداثيات للتحقق من التوفر.",
@@ -256,6 +278,12 @@ export const translations: Record<Language, TranslationKeys> = {
       searchMethod: "بحث",
       manualMethod: "يدوي",
       addressSuggestions: "المواقع المقترحة",
+      searchingLocations: "جارٍ البحث عن المواقع...",
+      locationsTab: "المواقع",
+      customLocationsTab: "مواقع مخصصة",
+      addCustomLocationAction: "إضافة موقع مخصص",
+      selected: "محدد",
+      noCustomLocations: "لا توجد مواقع مخصصة بعد.",
     },
   },
   de: {
@@ -289,6 +317,7 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "Hidschri",
       calendar: "Kalender",
       localTime: "Ortszeit",
+      location: "Ort",
       addCustomLocation: "Benutzerdefinierten Ort hinzufügen",
       customLocationTitle: "Benutzerdefinierter Ort",
       customLocationSubtitle: "Adresse oder Koordinaten eingeben, um die Verfügbarkeit zu prüfen.",
@@ -315,6 +344,12 @@ export const translations: Record<Language, TranslationKeys> = {
       searchMethod: "Suchen",
       manualMethod: "Manuell",
       addressSuggestions: "Vorgeschlagene Orte",
+      searchingLocations: "Orte werden gesucht...",
+      locationsTab: "Orte",
+      customLocationsTab: "Benutzerdefinierte Orte",
+      addCustomLocationAction: "Benutzerdefinierten Ort hinzufügen",
+      selected: "Ausgewählt",
+      noCustomLocations: "Noch keine benutzerdefinierten Orte.",
     },
   },
   fr: {
@@ -348,6 +383,7 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "Hijri",
       calendar: "Calendrier",
       localTime: "Heure locale",
+      location: "Lieu",
       addCustomLocation: "Ajouter un lieu personnalisé",
       customLocationTitle: "Lieu personnalisé",
       customLocationSubtitle: "Saisissez une adresse ou des coordonnées pour vérifier la disponibilité.",
@@ -374,6 +410,12 @@ export const translations: Record<Language, TranslationKeys> = {
       searchMethod: "Rechercher",
       manualMethod: "Manuel",
       addressSuggestions: "Lieux suggérés",
+      searchingLocations: "Recherche des lieux...",
+      locationsTab: "Lieux",
+      customLocationsTab: "Lieux personnalisés",
+      addCustomLocationAction: "Ajouter un lieu personnalisé",
+      selected: "Sélectionné",
+      noCustomLocations: "Aucun lieu personnalisé pour le moment.",
     },
   },
 }

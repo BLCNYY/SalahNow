@@ -21,9 +21,14 @@ type FormState = {
   lon: string
 }
 
-export function CustomLocationModal() {
+type CustomLocationModalProps = {
+  triggerLabel?: string
+  triggerClassName?: string
+}
+
+export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLocationModalProps) {
   const { t } = useLanguage()
-  const { addFavorite, setLocation, currentLocation } = useLocation()
+  const { addFavorite, addCustomLocation, setLocation, currentLocation } = useLocation()
   const [open, setOpen] = React.useState(false)
   const [advancedOpen, setAdvancedOpen] = React.useState(false)
   const [method, setMethod] = React.useState<"search" | "manual">("search")
@@ -35,8 +40,10 @@ export function CustomLocationModal() {
     lon: "",
   })
   const [address, setAddress] = React.useState("")
+  const [addressLabel, setAddressLabel] = React.useState<string | null>(null)
   const [addressStatus, setAddressStatus] = React.useState<"idle" | "finding">("idle")
   const [addressError, setAddressError] = React.useState<string | null>(null)
+  const [suggestionsLoading, setSuggestionsLoading] = React.useState(false)
   const [addressResults, setAddressResults] = React.useState<
     Array<{
       display_name: string
@@ -65,6 +72,8 @@ export function CustomLocationModal() {
     setAddress("")
     setAddressStatus("idle")
     setAddressError(null)
+    setAddressResults([])
+    setAddressLabel(null)
     setStatus("idle")
     setErrorMessage(null)
     setSuggestions([])
@@ -87,6 +96,8 @@ export function CustomLocationModal() {
     setAddress("")
     setAddressStatus("idle")
     setAddressError(null)
+    setAddressResults([])
+    setAddressLabel(null)
   }
 
   const updateField = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,6 +139,7 @@ export function CustomLocationModal() {
       lat: result.lat,
       lon: result.lon,
     }))
+    setAddressLabel(result.display_name)
   }
 
   const buildLocation = (): Location | null => {
@@ -145,6 +157,7 @@ export function CustomLocationModal() {
       countryCode,
       lat,
       lon,
+      addressLabel: addressLabel ?? undefined,
     }
     return location
   }
@@ -205,6 +218,7 @@ export function CustomLocationModal() {
         return
       }
       applyAddressResult(result)
+      setAddress(result.display_name)
       setAddressStatus("idle")
     } catch {
       setAddressError(t.ui.addressNotFound)
@@ -217,15 +231,18 @@ export function CustomLocationModal() {
     const query = address.trim()
     if (!query) {
       setAddressResults([])
+      setSuggestionsLoading(false)
       return
     }
     const timer = setTimeout(async () => {
       try {
+        setSuggestionsLoading(true)
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&limit=5&addressdetails=1&q=${encodeURIComponent(query)}`
         )
         if (!response.ok) {
           setAddressResults([])
+          setSuggestionsLoading(false)
           return
         }
         const data = (await response.json()) as Array<{
@@ -243,8 +260,10 @@ export function CustomLocationModal() {
           }
         }>
         setAddressResults(data)
+        setSuggestionsLoading(false)
       } catch {
         setAddressResults([])
+        setSuggestionsLoading(false)
       }
     }, 300)
     return () => clearTimeout(timer)
@@ -252,7 +271,7 @@ export function CustomLocationModal() {
 
   const handleSave = () => {
     if (!candidate) return
-    addFavorite(candidate)
+    addCustomLocation(candidate)
     setLocation(candidate)
     handleClose()
   }
@@ -268,11 +287,11 @@ export function CustomLocationModal() {
       <Button
         variant="ghost"
         size="sm"
-        className="h-9 sm:h-8 px-2 sm:px-3 text-xs sm:text-sm text-muted-foreground hover:text-foreground"
+        className={triggerClassName ?? "h-9 sm:h-8 px-2 sm:px-3 text-xs sm:text-sm text-muted-foreground hover:text-foreground"}
         onClick={handleOpen}
       >
         <HugeiconsIcon icon={AddCircleIcon} size={16} className="mr-1.5" />
-        <span>{t.ui.addCustomLocation}</span>
+        <span>{triggerLabel ?? t.ui.addCustomLocation}</span>
       </Button>
 
       <AnimatePresence>
@@ -330,7 +349,10 @@ export function CustomLocationModal() {
                     <div className="flex flex-col sm:flex-row gap-2">
                       <Input
                         value={address}
-                        onChange={(event) => setAddress(event.target.value)}
+                        onChange={(event) => {
+                          setAddress(event.target.value)
+                          setAddressLabel(null)
+                        }}
                         placeholder={t.ui.addressPlaceholder}
                         className={inputClassName}
                       />
@@ -345,6 +367,12 @@ export function CustomLocationModal() {
                     </div>
                     {addressError && (
                       <div className="text-xs text-destructive">{addressError}</div>
+                    )}
+                    {addressStatus === "finding" && (
+                      <div className="text-xs text-muted-foreground">{t.ui.searchingLocations}</div>
+                    )}
+                    {suggestionsLoading && (
+                      <div className="text-xs text-muted-foreground">{t.ui.searchingLocations}</div>
                     )}
                     {addressResults.length > 0 && (
                       <div className="rounded-xl border border-border bg-background shadow-sm">
