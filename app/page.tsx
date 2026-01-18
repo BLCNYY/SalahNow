@@ -14,7 +14,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { LocationSwitcher } from "@/components/location-switcher"
-import { LanguageSelector } from "@/components/language-selector"
 import { SettingsModal } from "@/components/settings-modal"
 import { MonthlyPrayerTimes } from "@/components/monthly-prayer-times"
 import { cn } from "@/lib/utils"
@@ -77,7 +76,6 @@ function PrayerTimesDisplay() {
           </Button>
 
           <SettingsModal />
-          <LanguageSelector />
         </div>
       </header>
 
