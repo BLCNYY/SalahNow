@@ -51,6 +51,32 @@ type TranslationKeys = {
     hijri: string
     calendar: string
     localTime: string
+    addCustomLocation: string
+    customLocationTitle: string
+    customLocationSubtitle: string
+    locationName: string
+    locationNamePlaceholder: string
+    countryPlaceholder: string
+    countryCodeLabel: string
+    countryCodePlaceholder: string
+    latitude: string
+    longitude: string
+    checkLocation: string
+    checkingLocation: string
+    saveLocation: string
+    customLocationInvalid: string
+    customLocationUnavailable: string
+    nearbyLocations: string
+    address: string
+    addressPlaceholder: string
+    findAddress: string
+    findingAddress: string
+    addressNotFound: string
+    advanced: string
+    or: string
+    searchMethod: string
+    manualMethod: string
+    addressSuggestions: string
   }
 }
 
@@ -86,6 +112,32 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "Hijri",
       calendar: "Calendar",
       localTime: "Local Time",
+      addCustomLocation: "Add Custom Location",
+      customLocationTitle: "Custom Location",
+      customLocationSubtitle: "Enter an address or coordinates to check availability.",
+      locationName: "Location Name",
+      locationNamePlaceholder: "e.g. Downtown",
+      countryPlaceholder: "Country name",
+      countryCodeLabel: "Country Code",
+      countryCodePlaceholder: "e.g. US",
+      latitude: "Latitude",
+      longitude: "Longitude",
+      checkLocation: "Check Location",
+      checkingLocation: "Checking...",
+      saveLocation: "Save Location",
+      customLocationInvalid: "Please enter a valid name, country, and coordinates.",
+      customLocationUnavailable: "Prayer times are not available for this location.",
+      nearbyLocations: "Nearby available locations",
+      address: "Exact Address",
+      addressPlaceholder: "Type a full address",
+      findAddress: "Find Address",
+      findingAddress: "Finding...",
+      addressNotFound: "Address could not be found.",
+      advanced: "Advanced",
+      or: "OR",
+      searchMethod: "Search",
+      manualMethod: "Manual",
+      addressSuggestions: "Suggested locations",
     },
   },
   tr: {
@@ -119,6 +171,32 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "Hicri",
       calendar: "Takvim",
       localTime: "Yerel Saat",
+      addCustomLocation: "Özel Konum Ekle",
+      customLocationTitle: "Özel Konum",
+      customLocationSubtitle: "Uygunluğu kontrol etmek için adres veya koordinat girin.",
+      locationName: "Konum Adı",
+      locationNamePlaceholder: "Örn. Merkez",
+      countryPlaceholder: "Ülke adı",
+      countryCodeLabel: "Ülke Kodu",
+      countryCodePlaceholder: "Örn. TR",
+      latitude: "Enlem",
+      longitude: "Boylam",
+      checkLocation: "Konumu Kontrol Et",
+      checkingLocation: "Kontrol ediliyor...",
+      saveLocation: "Konumu Kaydet",
+      customLocationInvalid: "Geçerli bir ad, ülke ve koordinat girin.",
+      customLocationUnavailable: "Bu konum için namaz vakitleri bulunamadı.",
+      nearbyLocations: "Yakındaki kullanılabilir konumlar",
+      address: "Açık Adres",
+      addressPlaceholder: "Tam adres girin",
+      findAddress: "Adres Bul",
+      findingAddress: "Bulunuyor...",
+      addressNotFound: "Adres bulunamadı.",
+      advanced: "Gelişmiş",
+      or: "VEYA",
+      searchMethod: "Ara",
+      manualMethod: "Manuel",
+      addressSuggestions: "Önerilen konumlar",
     },
   },
   ar: {
@@ -152,6 +230,32 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "هجري",
       calendar: "التقويم",
       localTime: "الوقت المحلي",
+      addCustomLocation: "إضافة موقع مخصص",
+      customLocationTitle: "موقع مخصص",
+      customLocationSubtitle: "أدخل عنوانًا أو إحداثيات للتحقق من التوفر.",
+      locationName: "اسم الموقع",
+      locationNamePlaceholder: "مثلاً: وسط المدينة",
+      countryPlaceholder: "اسم الدولة",
+      countryCodeLabel: "رمز الدولة",
+      countryCodePlaceholder: "مثلاً: SA",
+      latitude: "خط العرض",
+      longitude: "خط الطول",
+      checkLocation: "تحقق من الموقع",
+      checkingLocation: "جارٍ التحقق...",
+      saveLocation: "حفظ الموقع",
+      customLocationInvalid: "يرجى إدخال اسم وبلد وإحداثيات صحيحة.",
+      customLocationUnavailable: "أوقات الصلاة غير متاحة لهذا الموقع.",
+      nearbyLocations: "مواقع قريبة متاحة",
+      address: "العنوان الكامل",
+      addressPlaceholder: "اكتب العنوان الكامل",
+      findAddress: "ابحث عن العنوان",
+      findingAddress: "جارٍ البحث...",
+      addressNotFound: "تعذر العثور على العنوان.",
+      advanced: "خيارات متقدمة",
+      or: "أو",
+      searchMethod: "بحث",
+      manualMethod: "يدوي",
+      addressSuggestions: "المواقع المقترحة",
     },
   },
   de: {
@@ -185,6 +289,32 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "Hidschri",
       calendar: "Kalender",
       localTime: "Ortszeit",
+      addCustomLocation: "Benutzerdefinierten Ort hinzufügen",
+      customLocationTitle: "Benutzerdefinierter Ort",
+      customLocationSubtitle: "Adresse oder Koordinaten eingeben, um die Verfügbarkeit zu prüfen.",
+      locationName: "Ortsname",
+      locationNamePlaceholder: "z. B. Innenstadt",
+      countryPlaceholder: "Land",
+      countryCodeLabel: "Ländercode",
+      countryCodePlaceholder: "z. B. DE",
+      latitude: "Breitengrad",
+      longitude: "Längengrad",
+      checkLocation: "Ort prüfen",
+      checkingLocation: "Wird geprüft...",
+      saveLocation: "Ort speichern",
+      customLocationInvalid: "Bitte gültigen Namen, Land und Koordinaten eingeben.",
+      customLocationUnavailable: "Gebetszeiten sind für diesen Ort nicht verfügbar.",
+      nearbyLocations: "Nahegelegene verfügbare Orte",
+      address: "Genaue Adresse",
+      addressPlaceholder: "Genaue Adresse eingeben",
+      findAddress: "Adresse suchen",
+      findingAddress: "Suche läuft...",
+      addressNotFound: "Adresse konnte nicht gefunden werden.",
+      advanced: "Erweitert",
+      or: "ODER",
+      searchMethod: "Suchen",
+      manualMethod: "Manuell",
+      addressSuggestions: "Vorgeschlagene Orte",
     },
   },
   fr: {
@@ -218,6 +348,32 @@ export const translations: Record<Language, TranslationKeys> = {
       hijri: "Hijri",
       calendar: "Calendrier",
       localTime: "Heure locale",
+      addCustomLocation: "Ajouter un lieu personnalisé",
+      customLocationTitle: "Lieu personnalisé",
+      customLocationSubtitle: "Saisissez une adresse ou des coordonnées pour vérifier la disponibilité.",
+      locationName: "Nom du lieu",
+      locationNamePlaceholder: "Ex. Centre-ville",
+      countryPlaceholder: "Nom du pays",
+      countryCodeLabel: "Code pays",
+      countryCodePlaceholder: "Ex. FR",
+      latitude: "Latitude",
+      longitude: "Longitude",
+      checkLocation: "Vérifier le lieu",
+      checkingLocation: "Vérification...",
+      saveLocation: "Enregistrer le lieu",
+      customLocationInvalid: "Veuillez saisir un nom, un pays et des coordonnées valides.",
+      customLocationUnavailable: "Les horaires de prière ne sont pas disponibles pour ce lieu.",
+      nearbyLocations: "Lieux disponibles à proximité",
+      address: "Adresse exacte",
+      addressPlaceholder: "Saisissez une adresse complète",
+      findAddress: "Rechercher",
+      findingAddress: "Recherche...",
+      addressNotFound: "Adresse introuvable.",
+      advanced: "Avancé",
+      or: "OU",
+      searchMethod: "Rechercher",
+      manualMethod: "Manuel",
+      addressSuggestions: "Lieux suggérés",
     },
   },
 }

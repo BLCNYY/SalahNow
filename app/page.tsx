@@ -11,18 +11,13 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MobileSelect } from "@/components/mobile-select"
+import { PopupSelect } from "@/components/popup-select"
 import { LanguageSelector } from "@/components/language-selector"
 import { MonthlyPrayerTimes } from "@/components/monthly-prayer-times"
+import { CustomLocationModal } from "@/components/custom-location-modal"
 import { cn } from "@/lib/utils"
 import { LocationProvider, useLocation } from "@/lib/store"
 import { LanguageProvider, useLanguage } from "@/lib/language-store"
@@ -40,18 +35,29 @@ function PrayerTimesDisplay() {
   const [selectedCountry, setSelectedCountry] = React.useState(currentLocation.countryCode)
   const cities = React.useMemo(() => getCitiesByCountry(selectedCountry), [selectedCountry])
 
-  const countryOptions = React.useMemo(() => 
-    COUNTRIES_LIST.map((c) => ({ value: c.countryCode, label: c.country })),
-    []
-  )
+  const countryOptions = React.useMemo(() => {
+    const options = COUNTRIES_LIST.map((c) => ({ value: c.countryCode, label: c.country }))
+    const hasCurrent = options.some((option) => option.value === currentLocation.countryCode)
+    if (!hasCurrent) {
+      options.unshift({ value: currentLocation.countryCode, label: currentLocation.country })
+    }
+    return options
+  }, [currentLocation.country, currentLocation.countryCode])
 
-  const cityOptions = React.useMemo(() => 
-    cities.map((c) => ({ value: c.city, label: c.city })),
-    [cities]
-  )
+  const cityOptions = React.useMemo(() => {
+    const options = cities.map((c) => ({ value: c.city, label: c.city }))
+    const hasCurrent = options.some((option) => option.value === currentLocation.city)
+    if (!hasCurrent) {
+      options.unshift({ value: currentLocation.city, label: currentLocation.city })
+    }
+    return options
+  }, [cities, currentLocation.city])
 
   React.useEffect(() => {
-    setSelectedCountry(currentLocation.countryCode)
+    const hasCountry = COUNTRIES_LIST.some((c) => c.countryCode === currentLocation.countryCode)
+    if (hasCountry) {
+      setSelectedCountry(currentLocation.countryCode)
+    }
   }, [currentLocation.countryCode])
 
   React.useEffect(() => {
@@ -114,39 +120,26 @@ function PrayerTimesDisplay() {
             </>
           ) : (
             <>
-              <Select value={selectedCountry} onValueChange={handleCountryChange}>
-                <SelectTrigger className="w-[140px] border-none bg-transparent shadow-none hover:bg-accent/50 focus:ring-0 text-muted-foreground hover:text-foreground h-8 text-sm touch-manipulation">
-                  <div className="flex items-center gap-2 truncate">
-                    <HugeiconsIcon icon={Globe02Icon} size={16} className="shrink-0" />
-                    <SelectValue placeholder={t.ui.country} />
-                  </div>
-                </SelectTrigger>
-                <SelectContent className="max-h-[50vh]">
-                  {COUNTRIES_LIST.map((c) => (
-                    <SelectItem key={c.countryCode} value={c.countryCode}>
-                      {c.country}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={currentLocation.city} onValueChange={handleCityChange}>
-                <SelectTrigger className="w-[140px] border-none bg-transparent shadow-none hover:bg-accent/50 focus:ring-0 text-muted-foreground hover:text-foreground h-8 text-sm touch-manipulation">
-                  <div className="flex items-center gap-2 truncate">
-                    <HugeiconsIcon icon={Location01Icon} size={16} className="shrink-0" />
-                    <SelectValue placeholder={t.ui.city} />
-                  </div>
-                </SelectTrigger>
-                <SelectContent className="max-h-[50vh]">
-                  {cities.map((c) => (
-                    <SelectItem key={c.city} value={c.city}>
-                      {c.city}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <PopupSelect
+                value={selectedCountry}
+                onValueChange={handleCountryChange}
+                options={countryOptions}
+                placeholder={t.ui.country}
+                title={t.ui.selectCountry}
+                icon={<HugeiconsIcon icon={Globe02Icon} size={16} className="shrink-0" />}
+              />
+              <PopupSelect
+                value={currentLocation.city}
+                onValueChange={handleCityChange}
+                options={cityOptions}
+                placeholder={t.ui.city}
+                title={t.ui.selectCity}
+                icon={<HugeiconsIcon icon={Location01Icon} size={16} className="shrink-0" />}
+              />
             </>
           )}
+
+          <CustomLocationModal />
 
           <Button
             variant="ghost"
