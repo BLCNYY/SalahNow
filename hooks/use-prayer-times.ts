@@ -4,6 +4,7 @@ import * as React from "react"
 import { PrayerTimes, PrayerName, PRAYER_NAMES, Location } from "@/lib/types"
 import { fetchPrayerTimes, fetchTomorrowFajr } from "@/lib/api"
 import { getCurrentPrayerInfo, formatCountdown } from "@/lib/prayer-utils"
+import { useSettings } from "@/lib/settings-store"
 
 interface PrayerListItem {
   name: PrayerName
@@ -26,6 +27,7 @@ interface PrayerTimesState {
 }
 
 export function usePrayerTimes(location: Location) {
+  const { prayerSource } = useSettings()
   const [prayerTimes, setPrayerTimes] = React.useState<PrayerTimes | null>(null)
   const [tomorrowFajr, setTomorrowFajr] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(true)
@@ -57,8 +59,8 @@ export function usePrayerTimes(location: Location) {
     async function loadPrayerTimes() {
       try {
         const [times, tomorrow] = await Promise.all([
-          fetchPrayerTimes(location),
-          fetchTomorrowFajr(location),
+          fetchPrayerTimes(location, prayerSource),
+          fetchTomorrowFajr(location, prayerSource),
         ])
 
         if (isMounted) {
@@ -80,7 +82,7 @@ export function usePrayerTimes(location: Location) {
     return () => {
       isMounted = false
     }
-  }, [location])
+  }, [location, prayerSource])
 
   React.useEffect(() => {
     if (!prayerTimes) return

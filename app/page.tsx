@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { LocationSwitcher } from "@/components/location-switcher"
 import { LanguageSelector } from "@/components/language-selector"
+import { SettingsModal } from "@/components/settings-modal"
 import { MonthlyPrayerTimes } from "@/components/monthly-prayer-times"
 import { cn } from "@/lib/utils"
 import { LocationProvider, useLocation } from "@/lib/store"
@@ -22,6 +23,7 @@ import { LanguageProvider, useLanguage } from "@/lib/language-store"
 import { PrayerName } from "@/lib/types"
 import { getCountdownText } from "@/lib/i18n"
 import { usePrayerTimes } from "@/hooks/use-prayer-times"
+import { SettingsProvider } from "@/lib/settings-store"
 
 function PrayerTimesDisplay() {
   const { currentLocation, isFavorite, toggleFavorite, detectedCountryCode } = useLocation()
@@ -74,6 +76,7 @@ function PrayerTimesDisplay() {
             <span className="sr-only">Favorite Location</span>
           </Button>
 
+          <SettingsModal />
           <LanguageSelector />
         </div>
       </header>
@@ -185,14 +188,16 @@ function PrayerTimesDisplay() {
 export default function Page() {
   return (
     <LanguageProvider>
-      <LocationProvider>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset className="bg-background overflow-hidden flex flex-col h-[100dvh]">
-            <PrayerTimesDisplay />
-          </SidebarInset>
-        </SidebarProvider>
-      </LocationProvider>
+      <SettingsProvider>
+        <LocationProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="bg-background overflow-hidden flex flex-col h-[100dvh]">
+              <PrayerTimesDisplay />
+            </SidebarInset>
+          </SidebarProvider>
+        </LocationProvider>
+      </SettingsProvider>
     </LanguageProvider>
   )
 }

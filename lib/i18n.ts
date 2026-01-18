@@ -39,7 +39,10 @@ type TranslationKeys = {
     noSavedLocations: string
     clickStarToSave: string
     loading: string
+    settings: string
     language: string
+    defaultLanguage: string
+    defaultLanguageDescription: string
     country: string
     city: string
     monthlyPrayerTimes: string
@@ -52,6 +55,20 @@ type TranslationKeys = {
     calendar: string
     localTime: string
     location: string
+    defaultLocation: string
+    update: string
+    starredLocations: string
+    useCurrentLocation: string
+    requestLocation: string
+    saveDefaultLocation: string
+    locationPermissionDenied: string
+    locationUnavailable: string
+    advanced: string
+    prayerSource: string
+    prayerSourceDiyanet: string
+    prayerSourceDiyanetDescription: string
+    prayerSourceMwl: string
+    prayerSourceMwlDescription: string
     addCustomLocation: string
     customLocationTitle: string
     customLocationSubtitle: string
@@ -100,7 +117,10 @@ export const translations: Record<Language, TranslationKeys> = {
       noSavedLocations: "No starred locations yet.",
       clickStarToSave: "Click the star icon to star a location.",
       loading: "Loading prayer times...",
+      settings: "Settings",
       language: "Language",
+      defaultLanguage: "Default language",
+      defaultLanguageDescription: "Choose the language for the app.",
       country: "Country",
       city: "City",
       monthlyPrayerTimes: "Monthly Prayer Times",
@@ -113,6 +133,20 @@ export const translations: Record<Language, TranslationKeys> = {
       calendar: "Calendar",
       localTime: "Local Time",
       location: "Location",
+      defaultLocation: "Default location",
+      update: "Update",
+      starredLocations: "Starred locations",
+      useCurrentLocation: "Use current location",
+      requestLocation: "Use location permission",
+      saveDefaultLocation: "Save as default",
+      locationPermissionDenied: "Location permission was denied.",
+      locationUnavailable: "Location services are not available.",
+      advanced: "Advanced",
+      prayerSource: "Prayer time source",
+      prayerSourceDiyanet: "T.C. Diyanet İşleri Başkanlığı",
+      prayerSourceDiyanetDescription: "Official prayer times for Turkey provided by the Diyanet.",
+      prayerSourceMwl: "Muslim World League (AlAdhan API)",
+      prayerSourceMwlDescription: "International calculation from the Muslim World League method.",
       addCustomLocation: "Add Custom Location",
       customLocationTitle: "Custom Location",
       customLocationSubtitle: "Enter an address to check availability.",
@@ -159,7 +193,10 @@ export const translations: Record<Language, TranslationKeys> = {
       noSavedLocations: "Henüz yıldızlanan konum yok.",
       clickStarToSave: "Yıldızlamak için yıldıza tıklayın.",
       loading: "Namaz vakitleri yükleniyor...",
+      settings: "Ayarlar",
       language: "Dil",
+      defaultLanguage: "Varsayılan dil",
+      defaultLanguageDescription: "Uygulama dilini seçin.",
       country: "Ülke",
       city: "Şehir",
       monthlyPrayerTimes: "Aylık Namaz Vakitleri",
@@ -172,6 +209,20 @@ export const translations: Record<Language, TranslationKeys> = {
       calendar: "Takvim",
       localTime: "Yerel Saat",
       location: "Konum",
+      defaultLocation: "Varsayılan konum",
+      update: "Güncelle",
+      starredLocations: "Yıldızlanan konumlar",
+      useCurrentLocation: "Mevcut konumu kullan",
+      requestLocation: "Konum izni iste",
+      saveDefaultLocation: "Varsayılan olarak kaydet",
+      locationPermissionDenied: "Konum izni reddedildi.",
+      locationUnavailable: "Konum hizmeti kullanılamıyor.",
+      advanced: "Gelişmiş",
+      prayerSource: "Vakit kaynağı",
+      prayerSourceDiyanet: "T.C. Diyanet İşleri Başkanlığı",
+      prayerSourceDiyanetDescription: "Diyanet tarafından Türkiye için sağlanan resmi vakitler.",
+      prayerSourceMwl: "Muslim World League (AlAdhan API)",
+      prayerSourceMwlDescription: "Muslim World League yöntemine göre hesaplanan uluslararası vakitler.",
       addCustomLocation: "Özel Konum Ekle",
       customLocationTitle: "Özel Konum",
       customLocationSubtitle: "Uygunluğu kontrol etmek için adres girin.",
@@ -218,7 +269,10 @@ export const translations: Record<Language, TranslationKeys> = {
       noSavedLocations: "لا توجد مواقع مميزة بعد.",
       clickStarToSave: "انقر على النجمة للتمييز.",
       loading: "جاري تحميل أوقات الصلاة...",
+      settings: "الإعدادات",
       language: "اللغة",
+      defaultLanguage: "اللغة الافتراضية",
+      defaultLanguageDescription: "اختر لغة التطبيق.",
       country: "الدولة",
       city: "المدينة",
       monthlyPrayerTimes: "أوقات الصلاة الشهرية",
@@ -231,6 +285,20 @@ export const translations: Record<Language, TranslationKeys> = {
       calendar: "التقويم",
       localTime: "الوقت المحلي",
       location: "الموقع",
+      defaultLocation: "الموقع الافتراضي",
+      update: "تحديث",
+      starredLocations: "المواقع المميزة",
+      useCurrentLocation: "استخدم الموقع الحالي",
+      requestLocation: "طلب إذن الموقع",
+      saveDefaultLocation: "حفظ كافتراضي",
+      locationPermissionDenied: "تم رفض إذن الموقع.",
+      locationUnavailable: "خدمات الموقع غير متاحة.",
+      advanced: "متقدم",
+      prayerSource: "مصدر مواقيت الصلاة",
+      prayerSourceDiyanet: "رئاسة الشؤون الدينية التركية",
+      prayerSourceDiyanetDescription: "مواقيت رسمية لتركيا من رئاسة الشؤون الدينية.",
+      prayerSourceMwl: "رابطة العالم الإسلامي (واجهة AlAdhan)",
+      prayerSourceMwlDescription: "حساب عالمي وفق طريقة رابطة العالم الإسلامي.",
       addCustomLocation: "إضافة موقع مخصص",
       customLocationTitle: "موقع مخصص",
       customLocationSubtitle: "أدخل عنوانًا للتحقق من التوفر.",
@@ -277,7 +345,10 @@ export const translations: Record<Language, TranslationKeys> = {
       noSavedLocations: "Noch keine markierten Orte.",
       clickStarToSave: "Zum Markieren auf den Stern klicken.",
       loading: "Gebetszeiten werden geladen...",
+      settings: "Einstellungen",
       language: "Sprache",
+      defaultLanguage: "Standardsprache",
+      defaultLanguageDescription: "Sprache der App auswählen.",
       country: "Land",
       city: "Stadt",
       monthlyPrayerTimes: "Monatliche Gebetszeiten",
@@ -290,6 +361,20 @@ export const translations: Record<Language, TranslationKeys> = {
       calendar: "Kalender",
       localTime: "Ortszeit",
       location: "Ort",
+      defaultLocation: "Standardort",
+      update: "Aktualisieren",
+      starredLocations: "Markierte Orte",
+      useCurrentLocation: "Aktuellen Standort verwenden",
+      requestLocation: "Standortberechtigung anfordern",
+      saveDefaultLocation: "Als Standard speichern",
+      locationPermissionDenied: "Standortberechtigung wurde verweigert.",
+      locationUnavailable: "Standortdienste sind nicht verfügbar.",
+      advanced: "Erweitert",
+      prayerSource: "Quelle für Gebetszeiten",
+      prayerSourceDiyanet: "T.C. Diyanet İşleri Başkanlığı",
+      prayerSourceDiyanetDescription: "Offizielle Gebetszeiten für die Türkei von der Diyanet.",
+      prayerSourceMwl: "Muslim World League (AlAdhan API)",
+      prayerSourceMwlDescription: "Internationale Berechnung nach der Methode der Muslim World League.",
       addCustomLocation: "Benutzerdefinierten Ort hinzufügen",
       customLocationTitle: "Benutzerdefinierter Ort",
       customLocationSubtitle: "Adresse eingeben, um die Verfügbarkeit zu prüfen.",
@@ -336,7 +421,10 @@ export const translations: Record<Language, TranslationKeys> = {
       noSavedLocations: "Aucun lieu favori.",
       clickStarToSave: "Cliquez sur l'étoile pour ajouter aux favoris.",
       loading: "Chargement des horaires de prière...",
+      settings: "Paramètres",
       language: "Langue",
+      defaultLanguage: "Langue par défaut",
+      defaultLanguageDescription: "Choisir la langue de l'application.",
       country: "Pays",
       city: "Ville",
       monthlyPrayerTimes: "Horaires de prière mensuels",
@@ -349,6 +437,20 @@ export const translations: Record<Language, TranslationKeys> = {
       calendar: "Calendrier",
       localTime: "Heure locale",
       location: "Lieu",
+      defaultLocation: "Lieu par défaut",
+      update: "Mettre à jour",
+      starredLocations: "Lieux favoris",
+      useCurrentLocation: "Utiliser la position actuelle",
+      requestLocation: "Demander l'autorisation de localisation",
+      saveDefaultLocation: "Enregistrer par défaut",
+      locationPermissionDenied: "Autorisation de localisation refusée.",
+      locationUnavailable: "Les services de localisation ne sont pas disponibles.",
+      advanced: "Avancé",
+      prayerSource: "Source des horaires de prière",
+      prayerSourceDiyanet: "T.C. Diyanet İşleri Başkanlığı",
+      prayerSourceDiyanetDescription: "Horaires officiels pour la Turquie fournis par la Diyanet.",
+      prayerSourceMwl: "Muslim World League (API AlAdhan)",
+      prayerSourceMwlDescription: "Calcul international selon la méthode Muslim World League.",
       addCustomLocation: "Ajouter un lieu personnalisé",
       customLocationTitle: "Lieu personnalisé",
       customLocationSubtitle: "Saisissez une adresse pour vérifier la disponibilité.",

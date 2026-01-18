@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/ui/sidebar"
 import { toHijri } from "hijri-converter"
+import { useSettings } from "@/lib/settings-store"
 
 const LANGUAGE_LOCALES: Record<string, string> = {
   en: "en-US",
@@ -96,6 +97,7 @@ type CalendarType = "gregorian" | "hijri"
 export function MonthlyPrayerTimes() {
   const { t, language } = useLanguage()
   const { currentLocation } = useLocation()
+  const { prayerSource } = useSettings()
   const { setOpenMobile, setOpen: setSidebarOpen, open: sidebarOpen, openMobile } = useSidebar()
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
@@ -120,7 +122,7 @@ export function MonthlyPrayerTimes() {
     if (open) {
       setLoading(true)
       setError(null)
-      fetchMonthlyPrayerTimes(currentLocation)
+      fetchMonthlyPrayerTimes(currentLocation, prayerSource)
         .then((result) => {
           setData(result)
           setLoading(false)
@@ -130,7 +132,7 @@ export function MonthlyPrayerTimes() {
           setLoading(false)
         })
     }
-  }, [open, currentLocation])
+  }, [open, currentLocation, prayerSource])
 
   React.useEffect(() => {
     if (open && !loading && data.length > 0 && todayRef.current) {

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { useLanguage } from "@/lib/language-store"
 import { useLocation } from "@/lib/store"
 import { fetchPrayerTimes } from "@/lib/api"
+import { useSettings } from "@/lib/settings-store"
 import { Location, getNearestLocations } from "@/lib/types"
 
 const DEFAULT_COUNTRY_CODE = "XX"
@@ -29,6 +30,7 @@ type CustomLocationModalProps = {
 export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLocationModalProps) {
   const { t } = useLanguage()
   const { addFavorite, addCustomLocation, setLocation, currentLocation } = useLocation()
+  const { prayerSource } = useSettings()
   const [open, setOpen] = React.useState(false)
   const [form, setForm] = React.useState<FormState>({
     city: "",
@@ -165,7 +167,7 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
     const location = buildLocation()
     if (!location) return
     try {
-      await fetchPrayerTimes(location)
+      await fetchPrayerTimes(location, prayerSource)
       setCandidate(location)
       setStatus("ready")
     } catch {
