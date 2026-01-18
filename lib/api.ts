@@ -1,4 +1,4 @@
-import { PrayerTimes, Location } from "./types"
+import { PrayerTimes, Location, findNearestLocationByCountryCode } from "./types"
 
 interface AlAdhanTimings {
   Fajr: string
@@ -57,6 +57,7 @@ interface CachedPrayerData {
 const CACHE_KEY = "salahnow-prayer-cache"
 const MONTHLY_CACHE_KEY = "salahnow-prayer-cache-30d"
 const ALADHAN_BASE_URL = "https://api.aladhan.com/v1"
+const TURKEY_COUNTRY_CODE = "TR"
 
 function getCacheKey(location: Location): string {
   return `${location.city}-${location.countryCode}`
@@ -190,6 +191,19 @@ function formatTimeToHHMM(time: string): string {
   return time
 }
 
+function isTurkeyLocation(location: Location): boolean {
+  if (location.countryCode.toUpperCase() === TURKEY_COUNTRY_CODE) return true
+  const country = location.country.trim().toLowerCase()
+  return country === "turkey" || country === "türkiye" || country === "turkiye"
+}
+
+function getDiyanetIlceId(location: Location): string | null {
+  if (location.diyanetIlceId) return location.diyanetIlceId
+  if (!isTurkeyLocation(location)) return null
+  const nearest = findNearestLocationByCountryCode(location.lat, location.lon, TURKEY_COUNTRY_CODE)
+  return nearest?.diyanetIlceId ?? null
+}
+
 async function fetchFromDiyanet(ilceId: string): Promise<DiyanetPrayerTime[]> {
   const response = await fetch(`/api/diyanet?ilceId=${ilceId}`)
   
@@ -290,12 +304,16 @@ export async function fetchPrayerTimes(location: Location): Promise<{ times: Pra
     let times: PrayerTimes
     let tomorrowFajr: string
     let timeZone: string | null = null
+    const diyanetIlceId = getDiyanetIlceId(location)
 
-    if (location.diyanetIlceId) {
-      times = await fetchPrayerTimesFromDiyanet(location.diyanetIlceId)
-      tomorrowFajr = await fetchTomorrowFajrFromDiyanet(location.diyanetIlceId)
+    if (diyanetIlceId) {
+      times = await fetchPrayerTimesFromDiyanet(diyanetIlceId)
+      tomorrowFajr = await fetchTomorrowFajrFromDiyanet(diyanetIlceId)
       timeZone = "Europe/Istanbul"
     } else {
+      if (isTurkeyLocation(location)) {
+        throw new Error("Failed to resolve Diyanet location")
+      }
       const result = await fetchPrayerTimesFromAlAdhan(location)
       times = result.times
       timeZone = result.timeZone
@@ -320,8 +338,12 @@ export async function fetchTomorrowFajr(location: Location): Promise<string> {
     return cached.tomorrowFajr
   }
 
-  if (location.diyanetIlceId) {
-    return fetchTomorrowFajrFromDiyanet(location.diyanetIlceId)
+  const diyanetIlceId = getDiyanetIlceId(location)
+  if (diyanetIlceId) {
+    return fetchTomorrowFajrFromDiyanet(diyanetIlceId)
+  }
+  if (isTurkeyLocation(location)) {
+    throw new Error("Failed to resolve Diyanet location")
   }
   return fetchTomorrowFajrFromAlAdhan(location)
 }
@@ -389,8 +411,8 @@ function filterNext30Days(data: DiyanetPrayerTime[]): { filtered: DiyanetPrayerT
   return { filtered, startDate, endDate }
 }
 
-async function fetchNext30DaysFromDiyanet(location: Location): Promise<{ filtered: DiyanetPrayerTime[]; startDate: Date; endDate: Date }> {
-  const data = await fetchFromDiyanet(location.diyanetIlceId as string)
+async function fetchNext30DaysFromDiyanet(ilceId: string): Promise<{ filtered: DiyanetPrayerTime[]; startDate: Date; endDate: Date }> {
+  const data = await fetchFromDiyanet(ilceId)
   return filterNext30Days(data)
 }
 
@@ -399,10 +421,14 @@ export async function fetchMonthlyPrayerTimes(location: Location): Promise<Diyan
   if (cached) {
     return cached
   }
-  if (location.diyanetIlceId) {
-    const result = await fetchNext30DaysFromDiyanet(location)
+  const diyanetIlceId = getDiyanetIlceId(location)
+  if (diyanetIlceId) {
+    const result = await fetchNext30DaysFromDiyanet(diyanetIlceId)
     setCachedMonthlyData(location, result.filtered, result.startDate, result.endDate)
     return result.filtered
+  }
+  if (isTurkeyLocation(location)) {
+    throw new Error("Failed to resolve Diyanet location")
   }
   const { startDate, endDate } = getDateRange(30)
   const data = await fetchNext30DaysFromAlAdhan(location)
