@@ -150,7 +150,7 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 export function findNearestLocation(lat: number, lon: number): Location {
   let nearest = DEFAULT_LOCATION
   let minDistance = Infinity
-  
+
   for (const loc of COUNTRIES) {
     const distance = haversineDistance(lat, lon, loc.lat, loc.lon)
     if (distance < minDistance) {
@@ -158,7 +158,23 @@ export function findNearestLocation(lat: number, lon: number): Location {
       nearest = loc
     }
   }
-  
+
+  return nearest
+}
+
+export function findNearestLocationByCountryCode(lat: number, lon: number, countryCode: string): Location | null {
+  let nearest: Location | null = null
+  let minDistance = Infinity
+
+  for (const loc of COUNTRIES) {
+    if (loc.countryCode !== countryCode) continue
+    const distance = haversineDistance(lat, lon, loc.lat, loc.lon)
+    if (distance < minDistance) {
+      minDistance = distance
+      nearest = loc
+    }
+  }
+
   return nearest
 }
 
