@@ -20,6 +20,7 @@ import { Location01Icon, Cancel01Icon } from "@hugeicons/core-free-icons"
 import { useLocation } from "@/lib/store"
 import { useLanguage } from "@/lib/language-store"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { favorites, currentLocation, setLocation, removeFavorite } = useLocation()
@@ -35,6 +36,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return location.city === currentLocation.city && location.countryCode === currentLocation.countryCode
   }
 
+  const formatLocationName = (location: typeof currentLocation) => {
+    if (location.addressLabel) return location.city
+    return location.city
+  }
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -43,8 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg overflow-hidden shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/icons/icon.png" alt="Salah[Now]" className="size-8 object-contain" />
+                  <Image src="/icons/icon.png" alt="Salah[Now]" width={32} height={32} className="size-8 object-contain" />
                 </div>
                 <span className="font-semibold group-data-[collapsible=icon]:hidden">Salah[Now]</span>
               </a>
@@ -74,7 +79,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         )}
                       >
                         <HugeiconsIcon icon={Location01Icon} size={16} className="shrink-0" />
-                        <span className="flex-1 truncate">{item.city}, {item.country}</span>
+                        <span className="flex flex-1 flex-col truncate">
+                          <span className="truncate">{formatLocationName(item)}</span>
+                          <span className="truncate text-[11px] text-muted-foreground">
+                            {t.ui.country}: {item.country}
+                          </span>
+                        </span>
                       </SidebarMenuButton>
                       <SidebarMenuAction
                         onClick={(e) => {
