@@ -21,7 +21,6 @@ import { useLocation } from "@/lib/store"
 import { useLanguage } from "@/lib/language-store"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
-import { SettingsPanel } from "@/components/settings-panel"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { favorites, currentLocation, setLocation, removeFavorite } = useLocation()
@@ -60,57 +59,49 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {state === "expanded" && (
-          <>
-            <SidebarGroup>
-              <SidebarGroupLabel>{t.ui.savedLocations}</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {favorites.length === 0 ? (
-                    <div className="px-2 py-4 text-xs text-muted-foreground text-center">
-                      {t.ui.noSavedLocations}
-                      <br />
-                      {t.ui.clickStarToSave}
-                    </div>
-                  ) : (
-                    favorites.map((item) => (
-                      <SidebarMenuItem key={`${item.city}-${item.countryCode}`}>
-                        <SidebarMenuButton 
-                          onClick={() => handleLocationSelect(item)}
-                          className={cn(
-                            isCurrentLocation(item) && "bg-sidebar-accent"
-                          )}
-                        >
-                          <HugeiconsIcon icon={Location01Icon} size={16} className="shrink-0" />
-                          <span className="flex flex-1 flex-col truncate">
-                            <span className="truncate">{formatLocationName(item)}</span>
-                            <span className="truncate text-[11px] text-muted-foreground">
-                              {t.ui.country}: {item.country}
-                            </span>
+          <SidebarGroup>
+            <SidebarGroupLabel>{t.ui.savedLocations}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {favorites.length === 0 ? (
+                  <div className="px-2 py-4 text-xs text-muted-foreground text-center">
+                    {t.ui.noSavedLocations}
+                    <br />
+                    {t.ui.clickStarToSave}
+                  </div>
+                ) : (
+                  favorites.map((item) => (
+                    <SidebarMenuItem key={`${item.city}-${item.countryCode}`}>
+                      <SidebarMenuButton 
+                        onClick={() => handleLocationSelect(item)}
+                        className={cn(
+                          isCurrentLocation(item) && "bg-sidebar-accent"
+                        )}
+                      >
+                        <HugeiconsIcon icon={Location01Icon} size={16} className="shrink-0" />
+                        <span className="flex flex-1 flex-col truncate">
+                          <span className="truncate">{formatLocationName(item)}</span>
+                          <span className="truncate text-[11px] text-muted-foreground">
+                            {t.ui.country}: {item.country}
                           </span>
-                        </SidebarMenuButton>
-                        <SidebarMenuAction
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            removeFavorite(item)
-                          }}
-                          showOnHover
-                          className="hover:bg-destructive/20 hover:text-destructive"
-                        >
-                          <HugeiconsIcon icon={Cancel01Icon} size={12} />
-                        </SidebarMenuAction>
-                      </SidebarMenuItem>
-                    ))
-                  )}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarGroup>
-              <SidebarGroupLabel>{t.ui.settings}</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SettingsPanel />
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </>
+                        </span>
+                      </SidebarMenuButton>
+                      <SidebarMenuAction
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          removeFavorite(item)
+                        }}
+                        showOnHover
+                        className="hover:bg-destructive/20 hover:text-destructive"
+                      >
+                        <HugeiconsIcon icon={Cancel01Icon} size={12} />
+                      </SidebarMenuAction>
+                    </SidebarMenuItem>
+                  ))
+                )}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         )}
       </SidebarContent>
       <SidebarRail />
