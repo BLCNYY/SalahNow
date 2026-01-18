@@ -77,7 +77,7 @@ export function SettingsPanel() {
             <span className="text-sm font-medium text-foreground">{t.ui.defaultLocation}</span>
             <span className="text-xs text-muted-foreground">{currentLocation.city}, {currentLocation.country}</span>
           </div>
-          <Button size="sm" variant="outline" onClick={() => setExpanded((prev) => !prev)}>
+          <Button size="sm" onClick={() => setExpanded((prev) => !prev)}>
             {expanded ? t.ui.close : t.ui.update}
           </Button>
         </div>
