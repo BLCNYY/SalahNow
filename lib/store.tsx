@@ -5,6 +5,7 @@ import { Location, DEFAULT_LOCATION, findNearestLocation } from "./types"
 
 const FAVORITES_KEY = "salahnow-favorites"
 const LOCATION_STORAGE_KEY = "salahnow-location"
+const CUSTOM_LOCATIONS_KEY = "salahnow-custom-locations"
 const LOCATION_STORAGE_DURATION_MS = 30 * 24 * 60 * 60 * 1000
 
 type StoredLocation = {
@@ -15,9 +16,11 @@ type StoredLocation = {
 export interface LocationState {
   currentLocation: Location
   favorites: Location[]
+  customLocations: Location[]
   detectedCountryCode: string | null
   setLocation: (location: Location) => void
   addFavorite: (location: Location) => void
+  addCustomLocation: (location: Location) => void
   removeFavorite: (location: Location) => void
   isFavorite: (location: Location) => boolean
   toggleFavorite: (location: Location) => void
@@ -52,6 +55,25 @@ function saveFavorites(favorites: Location[]) {
   }
 }
 
+function loadCustomLocations(): Location[] {
+  if (typeof window === "undefined") return []
+  try {
+    const stored = localStorage.getItem(CUSTOM_LOCATIONS_KEY)
+    return stored ? JSON.parse(stored) : []
+  } catch {
+    return []
+  }
+}
+
+function saveCustomLocations(locations: Location[]) {
+  if (typeof window === "undefined") return
+  try {
+    localStorage.setItem(CUSTOM_LOCATIONS_KEY, JSON.stringify(locations))
+  } catch {
+    console.error("Failed to save custom locations")
+  }
+}
+
 function loadStoredLocation(): StoredLocation | null {
   if (typeof window === "undefined") return null
   try {
@@ -75,12 +97,15 @@ function saveStoredLocation(location: Location) {
 export function LocationProvider({ children }: { children: React.ReactNode }) {
   const [currentLocation, setCurrentLocation] = React.useState<Location>(DEFAULT_LOCATION)
   const [favorites, setFavorites] = React.useState<Location[]>([])
+  const [customLocations, setCustomLocations] = React.useState<Location[]>([])
   const [detectedCountryCode, setDetectedCountryCode] = React.useState<string | null>(null)
   const [isHydrated, setIsHydrated] = React.useState(false)
 
   React.useEffect(() => {
     const loaded = loadFavorites()
     setFavorites(loaded)
+    const loadedCustom = loadCustomLocations()
+    setCustomLocations(loadedCustom)
 
     const storedLocation = loadStoredLocation()
     if (
@@ -128,6 +153,22 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
     })
   }, [])
 
+  const addCustomLocation = React.useCallback((location: Location) => {
+    setCustomLocations((prev) => {
+      const exists = prev.some(
+        (item) =>
+          item.city === location.city &&
+          item.countryCode === location.countryCode &&
+          item.lat === location.lat &&
+          item.lon === location.lon
+      )
+      if (exists) return prev
+      const next = [...prev, location]
+      saveCustomLocations(next)
+      return next
+    })
+  }, [])
+
   const removeFavorite = React.useCallback((location: Location) => {
     setFavorites((prev) => {
       const newFavorites = prev.filter(
@@ -162,14 +203,16 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
     () => ({
       currentLocation,
       favorites,
+      customLocations,
       detectedCountryCode,
       setLocation,
       addFavorite,
+      addCustomLocation,
       removeFavorite,
       isFavorite,
       toggleFavorite,
     }),
-    [currentLocation, favorites, detectedCountryCode, setLocation, addFavorite, removeFavorite, isFavorite, toggleFavorite]
+    [currentLocation, favorites, customLocations, detectedCountryCode, setLocation, addFavorite, addCustomLocation, removeFavorite, isFavorite, toggleFavorite]
   )
 
   if (!isHydrated) {

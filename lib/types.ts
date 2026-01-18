@@ -4,6 +4,7 @@ export interface Location {
   countryCode: string
   lat: number
   lon: number
+  addressLabel?: string
   diyanetIlceId?: string
 }
 
@@ -159,4 +160,14 @@ export function findNearestLocation(lat: number, lon: number): Location {
   }
   
   return nearest
+}
+
+export function getNearestLocations(lat: number, lon: number, limit: number): Location[] {
+  return COUNTRIES.map((loc) => ({
+    loc,
+    distance: haversineDistance(lat, lon, loc.lat, loc.lon),
+  }))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, limit)
+    .map((entry) => entry.loc)
 }
