@@ -22,6 +22,7 @@ import { LanguageProvider, useLanguage } from "@/lib/language-store"
 import { PrayerName } from "@/lib/types"
 import { getCountdownText } from "@/lib/i18n"
 import { usePrayerTimes } from "@/hooks/use-prayer-times"
+import { SettingsProvider } from "@/lib/settings-store"
 
 function PrayerTimesDisplay() {
   const { currentLocation, isFavorite, toggleFavorite, detectedCountryCode } = useLocation()
@@ -185,14 +186,16 @@ function PrayerTimesDisplay() {
 export default function Page() {
   return (
     <LanguageProvider>
-      <LocationProvider>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset className="bg-background overflow-hidden flex flex-col h-[100dvh]">
-            <PrayerTimesDisplay />
-          </SidebarInset>
-        </SidebarProvider>
-      </LocationProvider>
+      <SettingsProvider>
+        <LocationProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="bg-background overflow-hidden flex flex-col h-[100dvh]">
+              <PrayerTimesDisplay />
+            </SidebarInset>
+          </SidebarProvider>
+        </LocationProvider>
+      </SettingsProvider>
     </LanguageProvider>
   )
 }

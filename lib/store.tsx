@@ -139,6 +139,8 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
 
   const setLocation = React.useCallback((location: Location) => {
     setCurrentLocation(location)
+    setDetectedCountryCode(location.countryCode)
+    saveStoredLocation(location)
   }, [])
 
   const addFavorite = React.useCallback((location: Location) => {

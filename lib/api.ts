@@ -1,4 +1,5 @@
 import { PrayerTimes, Location, findNearestLocationByCountryCode } from "./types"
+import { DEFAULT_PRAYER_SOURCE, PrayerSource } from "./prayer-source"
 
 interface AlAdhanTimings {
   Fajr: string
@@ -59,8 +60,8 @@ const MONTHLY_CACHE_KEY = "salahnow-prayer-cache-30d"
 const ALADHAN_BASE_URL = "https://api.aladhan.com/v1"
 const TURKEY_COUNTRY_CODE = "TR"
 
-function getCacheKey(location: Location): string {
-  return `${location.city}-${location.countryCode}`
+function getCacheKey(location: Location, source: PrayerSource): string {
+  return `${location.city}-${location.countryCode}-${source}`
 }
 
 function getTodayDateString(): string {
@@ -103,13 +104,13 @@ interface CachedMonthlyPrayerData {
   location: string
 }
 
-function getCachedData(location: Location): CachedPrayerData | null {
+function getCachedData(location: Location, source: PrayerSource): CachedPrayerData | null {
   if (typeof window === "undefined") return null
   try {
     const cached = localStorage.getItem(CACHE_KEY)
     if (!cached) return null
     const data: Record<string, CachedPrayerData> = JSON.parse(cached)
-    const key = getCacheKey(location)
+    const key = getCacheKey(location, source)
     const entry = data[key]
     if (entry && entry.date === getTodayDateString()) {
       return entry
@@ -120,13 +121,13 @@ function getCachedData(location: Location): CachedPrayerData | null {
   }
 }
 
-function getCachedMonthlyData(location: Location): DiyanetPrayerTime[] | null {
+function getCachedMonthlyData(location: Location, source: PrayerSource): DiyanetPrayerTime[] | null {
   if (typeof window === "undefined") return null
   try {
     const cached = localStorage.getItem(MONTHLY_CACHE_KEY)
     if (!cached) return null
     const data: Record<string, CachedMonthlyPrayerData> = JSON.parse(cached)
-    const key = getCacheKey(location)
+    const key = getCacheKey(location, source)
     const entry = data[key]
     if (!entry) return null
     const today = normalizeDate(new Date())
@@ -139,12 +140,12 @@ function getCachedMonthlyData(location: Location): DiyanetPrayerTime[] | null {
   }
 }
 
-function setCachedData(location: Location, times: PrayerTimes, tomorrowFajr: string, timeZone: string | null): void {
+function setCachedData(location: Location, source: PrayerSource, times: PrayerTimes, tomorrowFajr: string, timeZone: string | null): void {
   if (typeof window === "undefined") return
   try {
     const cached = localStorage.getItem(CACHE_KEY)
     const data: Record<string, CachedPrayerData> = cached ? JSON.parse(cached) : {}
-    const key = getCacheKey(location)
+    const key = getCacheKey(location, source)
     data[key] = {
       times,
       tomorrowFajr,
@@ -158,12 +159,12 @@ function setCachedData(location: Location, times: PrayerTimes, tomorrowFajr: str
   }
 }
 
-function setCachedMonthlyData(location: Location, data: DiyanetPrayerTime[], startDate: Date, endDate: Date): void {
+function setCachedMonthlyData(location: Location, source: PrayerSource, data: DiyanetPrayerTime[], startDate: Date, endDate: Date): void {
   if (typeof window === "undefined") return
   try {
     const cached = localStorage.getItem(MONTHLY_CACHE_KEY)
     const stored: Record<string, CachedMonthlyPrayerData> = cached ? JSON.parse(cached) : {}
-    const key = getCacheKey(location)
+    const key = getCacheKey(location, source)
     stored[key] = {
       data,
       startDate: formatLocalDateString(startDate),
@@ -202,6 +203,10 @@ function getDiyanetIlceId(location: Location): string | null {
   if (!isTurkeyLocation(location)) return null
   const nearest = findNearestLocationByCountryCode(location.lat, location.lon, TURKEY_COUNTRY_CODE)
   return nearest?.diyanetIlceId ?? null
+}
+
+function resolvePrayerSource(location: Location, source: PrayerSource): PrayerSource {
+  return isTurkeyLocation(location) ? source : "mwl"
 }
 
 async function fetchFromDiyanet(ilceId: string): Promise<DiyanetPrayerTime[]> {
@@ -294,8 +299,9 @@ async function fetchTomorrowFajrFromAlAdhan(location: Location): Promise<string>
   return formatTimeToHHMM(data.data.timings.Fajr)
 }
 
-export async function fetchPrayerTimes(location: Location): Promise<{ times: PrayerTimes; timeZone: string | null }> {
-  const cached = getCachedData(location)
+export async function fetchPrayerTimes(location: Location, source: PrayerSource = DEFAULT_PRAYER_SOURCE): Promise<{ times: PrayerTimes; timeZone: string | null }> {
+  const resolvedSource = resolvePrayerSource(location, source)
+  const cached = getCachedData(location, resolvedSource)
   if (cached) {
     return { times: cached.times, timeZone: cached.timeZone ?? null }
   }
@@ -304,27 +310,27 @@ export async function fetchPrayerTimes(location: Location): Promise<{ times: Pra
     let times: PrayerTimes
     let tomorrowFajr: string
     let timeZone: string | null = null
-    const diyanetIlceId = getDiyanetIlceId(location)
+    const diyanetIlceId = resolvedSource === "diyanet" ? getDiyanetIlceId(location) : null
 
-    if (diyanetIlceId) {
+    if (resolvedSource === "diyanet") {
+      if (!diyanetIlceId) {
+        throw new Error("Failed to resolve Diyanet location")
+      }
       times = await fetchPrayerTimesFromDiyanet(diyanetIlceId)
       tomorrowFajr = await fetchTomorrowFajrFromDiyanet(diyanetIlceId)
       timeZone = "Europe/Istanbul"
     } else {
-      if (isTurkeyLocation(location)) {
-        throw new Error("Failed to resolve Diyanet location")
-      }
       const result = await fetchPrayerTimesFromAlAdhan(location)
       times = result.times
       timeZone = result.timeZone
       tomorrowFajr = await fetchTomorrowFajrFromAlAdhan(location)
     }
 
-    setCachedData(location, times, tomorrowFajr, timeZone)
-    prefetchMonthlyPrayerTimes(location)
+    setCachedData(location, resolvedSource, times, tomorrowFajr, timeZone)
+    prefetchMonthlyPrayerTimes(location, resolvedSource)
     return { times, timeZone }
   } catch (error) {
-    const staleCache = getCachedData(location)
+    const staleCache = getCachedData(location, resolvedSource)
     if (staleCache) {
       return { times: staleCache.times, timeZone: staleCache.timeZone ?? null }
     }
@@ -332,18 +338,19 @@ export async function fetchPrayerTimes(location: Location): Promise<{ times: Pra
   }
 }
 
-export async function fetchTomorrowFajr(location: Location): Promise<string> {
-  const cached = getCachedData(location)
+export async function fetchTomorrowFajr(location: Location, source: PrayerSource = DEFAULT_PRAYER_SOURCE): Promise<string> {
+  const resolvedSource = resolvePrayerSource(location, source)
+  const cached = getCachedData(location, resolvedSource)
   if (cached) {
     return cached.tomorrowFajr
   }
 
-  const diyanetIlceId = getDiyanetIlceId(location)
-  if (diyanetIlceId) {
+  if (resolvedSource === "diyanet") {
+    const diyanetIlceId = getDiyanetIlceId(location)
+    if (!diyanetIlceId) {
+      throw new Error("Failed to resolve Diyanet location")
+    }
     return fetchTomorrowFajrFromDiyanet(diyanetIlceId)
-  }
-  if (isTurkeyLocation(location)) {
-    throw new Error("Failed to resolve Diyanet location")
   }
   return fetchTomorrowFajrFromAlAdhan(location)
 }
@@ -416,26 +423,27 @@ async function fetchNext30DaysFromDiyanet(ilceId: string): Promise<{ filtered: D
   return filterNext30Days(data)
 }
 
-export async function fetchMonthlyPrayerTimes(location: Location): Promise<DiyanetPrayerTime[]> {
-  const cached = getCachedMonthlyData(location)
+export async function fetchMonthlyPrayerTimes(location: Location, source: PrayerSource = DEFAULT_PRAYER_SOURCE): Promise<DiyanetPrayerTime[]> {
+  const resolvedSource = resolvePrayerSource(location, source)
+  const cached = getCachedMonthlyData(location, resolvedSource)
   if (cached) {
     return cached
   }
-  const diyanetIlceId = getDiyanetIlceId(location)
-  if (diyanetIlceId) {
+  const diyanetIlceId = resolvedSource === "diyanet" ? getDiyanetIlceId(location) : null
+  if (resolvedSource === "diyanet") {
+    if (!diyanetIlceId) {
+      throw new Error("Failed to resolve Diyanet location")
+    }
     const result = await fetchNext30DaysFromDiyanet(diyanetIlceId)
-    setCachedMonthlyData(location, result.filtered, result.startDate, result.endDate)
+    setCachedMonthlyData(location, resolvedSource, result.filtered, result.startDate, result.endDate)
     return result.filtered
-  }
-  if (isTurkeyLocation(location)) {
-    throw new Error("Failed to resolve Diyanet location")
   }
   const { startDate, endDate } = getDateRange(30)
   const data = await fetchNext30DaysFromAlAdhan(location)
-  setCachedMonthlyData(location, data, startDate, endDate)
+  setCachedMonthlyData(location, resolvedSource, data, startDate, endDate)
   return data
 }
 
-function prefetchMonthlyPrayerTimes(location: Location): void {
-  fetchMonthlyPrayerTimes(location).catch(() => {})
+function prefetchMonthlyPrayerTimes(location: Location, source: PrayerSource): void {
+  fetchMonthlyPrayerTimes(location, source).catch(() => {})
 }
