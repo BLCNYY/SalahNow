@@ -49,6 +49,11 @@ export function LocationSwitcher() {
     handleClose()
   }
 
+  const formatCustomLocationLabel = (location: typeof currentLocation) => {
+    if (location.addressLabel) return location.city
+    return `${location.city}, ${location.country}`
+  }
+
   return (
     <>
       <button
@@ -56,7 +61,7 @@ export function LocationSwitcher() {
         className="flex items-center gap-2 h-9 sm:h-8 px-2 sm:px-3 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors touch-manipulation truncate"
       >
         <HugeiconsIcon icon={Location01Icon} size={16} className="shrink-0" />
-        <span className="truncate">{currentLocation.city}, {currentLocation.country}</span>
+        <span className="truncate">{formatCustomLocationLabel(currentLocation)}</span>
       </button>
 
       <AnimatePresence>
@@ -169,7 +174,7 @@ export function LocationSwitcher() {
                             )}
                           >
                             <span className="flex flex-col">
-                              <span className="truncate">{loc.city}, {loc.country}</span>
+                              <span className="truncate">{formatCustomLocationLabel(loc)}</span>
                               <span className="truncate text-xs text-muted-foreground">
                                 {loc.addressLabel ?? loc.country}
                               </span>

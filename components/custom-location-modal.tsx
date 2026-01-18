@@ -30,8 +30,6 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
   const { t } = useLanguage()
   const { addFavorite, addCustomLocation, setLocation, currentLocation } = useLocation()
   const [open, setOpen] = React.useState(false)
-  const [advancedOpen, setAdvancedOpen] = React.useState(false)
-  const [method, setMethod] = React.useState<"search" | "manual">("search")
   const [form, setForm] = React.useState<FormState>({
     city: "",
     country: "",
@@ -67,8 +65,6 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
 
   const handleOpen = () => {
     setOpen(true)
-    setAdvancedOpen(false)
-    setMethod("search")
     setAddress("")
     setAddressStatus("idle")
     setAddressError(null)
@@ -227,7 +223,6 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
   }
 
   React.useEffect(() => {
-    if (method !== "search") return
     const query = address.trim()
     if (!query) {
       setAddressResults([])
@@ -267,7 +262,7 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
       }
     }, 300)
     return () => clearTimeout(timer)
-  }, [address, method])
+  }, [address])
 
   const handleSave = () => {
     if (!candidate) return
@@ -324,24 +319,18 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
               </div>
 
               <div className="px-4 py-4 space-y-4">
-                <div className="flex items-center rounded-full border border-border bg-muted/30 p-1 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setMethod("search")}
-                    className={`flex-1 rounded-full px-3 py-1.5 font-semibold transition-colors ${method === "search" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 ring-2 ring-primary/40" : "text-muted-foreground"}`}
-                  >
-                    {t.ui.searchMethod}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMethod("manual")}
-                    className={`flex-1 rounded-full px-3 py-1.5 font-semibold transition-colors ${method === "manual" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 ring-2 ring-primary/40" : "text-muted-foreground"}`}
-                  >
-                    {t.ui.manualMethod}
-                  </button>
-                </div>
-
-                {method === "search" && (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                      {t.ui.locationName}
+                    </label>
+                    <Input
+                      value={form.city}
+                      onChange={updateField("city")}
+                      placeholder={t.ui.locationNamePlaceholder}
+                      className={inputClassName}
+                    />
+                  </div>
                   <div className="space-y-2">
                     <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       {t.ui.address}
@@ -398,83 +387,7 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
                       </div>
                     )}
                   </div>
-                )}
-
-                {method === "manual" && (
-                  <>
-                    <div className="space-y-2">
-                      <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                        {t.ui.locationName}
-                      </label>
-                      <Input
-                        value={form.city}
-                        onChange={updateField("city")}
-                        placeholder={t.ui.locationNamePlaceholder}
-                        className={inputClassName}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                          {t.ui.country}
-                        </label>
-                        <Input
-                          value={form.country}
-                          onChange={updateField("country")}
-                          placeholder={t.ui.countryPlaceholder}
-                          className={inputClassName}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                          {t.ui.countryCodeLabel}
-                        </label>
-                        <Input
-                          value={form.countryCode}
-                          onChange={updateField("countryCode")}
-                          placeholder={t.ui.countryCodePlaceholder}
-                          className={inputClassName}
-                        />
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setAdvancedOpen((prev) => !prev)}
-                      className="text-xs font-semibold text-primary uppercase tracking-wide"
-                    >
-                      {t.ui.advanced}
-                    </button>
-
-                    {advancedOpen && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                            {t.ui.latitude}
-                          </label>
-                          <Input
-                            value={form.lat}
-                            onChange={updateField("lat")}
-                            placeholder="41.0082"
-                            className={inputClassName}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                            {t.ui.longitude}
-                          </label>
-                          <Input
-                            value={form.lon}
-                            onChange={updateField("lon")}
-                            placeholder="28.9784"
-                            className={inputClassName}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+                </div>
 
                 <div className="flex items-center gap-3">
                   <Button onClick={handleCheck} disabled={status === "checking"} className="flex-1">
