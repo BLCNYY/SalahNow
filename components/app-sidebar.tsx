@@ -20,7 +20,6 @@ import { Location01Icon, Cancel01Icon } from "@hugeicons/core-free-icons"
 import { useLocation } from "@/lib/store"
 import { useLanguage } from "@/lib/language-store"
 import { cn } from "@/lib/utils"
-import Image from "next/image"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { favorites, currentLocation, setLocation, removeFavorite } = useLocation()
@@ -48,13 +47,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <Image
-                  src="/icons/icon.png"
-                  alt="Salah[Now]"
-                  width={32}
-                  height={32}
-                  className="size-8 shrink-0 rounded-lg object-contain"
-                />
                 <span className="font-semibold group-data-[collapsible=icon]:hidden">Salah[Now]</span>
               </a>
             </SidebarMenuButton>
