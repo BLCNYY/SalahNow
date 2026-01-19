@@ -3,7 +3,7 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Cancel01Icon, Location01Icon, Search01Icon } from "@hugeicons/core-free-icons"
+import { Cancel01Icon, Location01Icon, Menu06Icon, Search01Icon } from "@hugeicons/core-free-icons"
 import { useLocation } from "@/lib/store"
 import { useLanguage } from "@/lib/language-store"
 import { COUNTRIES } from "@/lib/types"
@@ -11,11 +11,12 @@ import { CustomLocationModal } from "@/components/custom-location-modal"
 import { cn } from "@/lib/utils"
 
 export function LocationSwitcher() {
-  const { currentLocation, setLocation, customLocations } = useLocation()
+  const { currentLocation, setLocation, customLocations, removeCustomLocation, updateCustomLocation } = useLocation()
   const { t } = useLanguage()
   const [open, setOpen] = React.useState(false)
   const [tab, setTab] = React.useState<"locations" | "custom">("locations")
   const [search, setSearch] = React.useState("")
+  const [openMenuKey, setOpenMenuKey] = React.useState<string | null>(null)
 
   const filteredLocations = React.useMemo(() => {
     const query = search.trim().toLowerCase()
@@ -42,12 +43,36 @@ export function LocationSwitcher() {
   const handleClose = () => {
     setOpen(false)
     setSearch("")
+    setOpenMenuKey(null)
   }
 
   const handleSelect = (location: typeof currentLocation) => {
     setLocation(location)
     handleClose()
   }
+
+  const handleCustomDelete = (location: typeof currentLocation) => {
+    removeCustomLocation(location)
+    setOpenMenuKey(null)
+  }
+
+  const getCustomKey = (location: typeof currentLocation) => {
+    return `${location.city}-${location.countryCode}-${location.lat}-${location.lon}`
+  }
+
+  React.useEffect(() => {
+    if (!openMenuKey) return
+    const handleClick = (event: MouseEvent) => {
+      if (!(event.target instanceof Node)) return
+      const target = event.target as HTMLElement
+      if (target.closest("[data-location-menu]")) return
+      setOpenMenuKey(null)
+    }
+    document.addEventListener("click", handleClick)
+    return () => {
+      document.removeEventListener("click", handleClick)
+    }
+  }, [openMenuKey])
 
   const formatCustomLocationLabel = (location: typeof currentLocation) => {
     if (location.addressLabel) return location.city
@@ -163,26 +188,68 @@ export function LocationSwitcher() {
                     ) : (
                       <div className="space-y-2">
                         {filteredCustom.map((loc) => (
-                          <button
-                            key={`${loc.city}-${loc.countryCode}-${loc.lat}-${loc.lon}`}
-                            onClick={() => handleSelect(loc)}
+                          <div key={getCustomKey(loc)} className="relative group/location-item">
+                          <div
                             className={cn(
-                              "w-full flex items-center justify-between rounded-xl border border-border px-3 py-2 text-left text-sm hover:bg-muted/40 transition-colors",
+                              "w-full flex items-center gap-2 rounded-xl border border-border px-3 py-2 text-sm",
                               loc.city === currentLocation.city && loc.countryCode === currentLocation.countryCode && loc.lat === currentLocation.lat && loc.lon === currentLocation.lon
                                 ? "border-primary/40 bg-primary/10"
-                                : ""
+                                : "bg-background"
                             )}
                           >
-                            <span className="flex flex-col">
-                              <span className="truncate">{formatCustomLocationLabel(loc)}</span>
-                              <span className="truncate text-xs text-muted-foreground">
-                                {loc.addressLabel ?? loc.country}
+                            <button
+                              onClick={() => handleSelect(loc)}
+                              className="flex-1 text-left hover:text-foreground transition-colors"
+                            >
+                              <span className="flex flex-col">
+                                <span className="truncate">{formatCustomLocationLabel(loc)}</span>
+                                <span className="truncate text-xs text-muted-foreground">
+                                  {loc.addressLabel ?? loc.country}
+                                </span>
                               </span>
-                            </span>
+                            </button>
                             {loc.city === currentLocation.city && loc.countryCode === currentLocation.countryCode && loc.lat === currentLocation.lat && loc.lon === currentLocation.lon ? (
                               <span className="text-xs text-primary">{t.ui.selected}</span>
                             ) : null}
-                          </button>
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                setOpenMenuKey((prev) => (prev === getCustomKey(loc) ? null : getCustomKey(loc)))
+                              }}
+                              className={cn(
+                                "ml-2 flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-opacity",
+                                "opacity-0 group-hover/location-item:opacity-100 focus-visible:opacity-100 hover:text-foreground"
+                              )}
+                              aria-label={t.ui.customLocationMenu}
+                              data-location-menu
+                            >
+                              <HugeiconsIcon icon={Menu06Icon} size={16} />
+                            </button>
+                          </div>
+                          {openMenuKey === getCustomKey(loc) ? (
+                            <div
+                              className="absolute right-2 top-11 z-10 w-40 rounded-lg border border-border bg-background p-1 shadow-lg"
+                              data-location-menu
+                            >
+                              <CustomLocationModal
+                                initialLocation={loc}
+                                onSaveLocation={(next) => updateCustomLocation(loc, next)}
+                                triggerLabel={t.ui.editCustomLocation}
+                                triggerClassName="w-full justify-start h-9 px-2 text-sm text-foreground hover:bg-muted/40"
+                                triggerIcon={null}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleCustomDelete(loc)}
+                                className="w-full rounded-md px-2 py-2 text-left text-sm text-destructive/80 hover:bg-muted/40 hover:text-destructive"
+                                data-location-menu
+                              >
+                                {t.ui.deleteCustomLocation}
+                              </button>
+                            </div>
+                          ) : null}
+                          </div>
                         ))}
                       </div>
                     )}

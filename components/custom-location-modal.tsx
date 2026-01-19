@@ -25,9 +25,12 @@ type FormState = {
 type CustomLocationModalProps = {
   triggerLabel?: string
   triggerClassName?: string
+  triggerIcon?: React.ReactNode | null
+  initialLocation?: Location
+  onSaveLocation?: (next: Location) => void
 }
 
-export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLocationModalProps) {
+export function CustomLocationModal({ triggerLabel, triggerClassName, triggerIcon, initialLocation, onSaveLocation }: CustomLocationModalProps) {
   const { t } = useLanguage()
   const { addFavorite, addCustomLocation, setLocation, currentLocation } = useLocation()
   const { prayerSource } = useSettings()
@@ -65,24 +68,30 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
   const [suggestions, setSuggestions] = React.useState<Location[]>([])
   const [candidate, setCandidate] = React.useState<Location | null>(null)
 
+  const isEditMode = Boolean(initialLocation)
+
   const handleOpen = () => {
     setOpen(true)
+    const baseLocation = initialLocation ?? currentLocation
     setAddress("")
     setAddressStatus("idle")
     setAddressError(null)
     setAddressResults([])
-    setAddressLabel(null)
-    setStatus("idle")
+    setAddressLabel(initialLocation?.addressLabel ?? null)
+    setStatus(initialLocation ? "ready" : "idle")
     setErrorMessage(null)
     setSuggestions([])
-    setCandidate(null)
+    setCandidate(initialLocation ?? null)
     setForm({
-      city: "",
-      country: currentLocation.country,
-      countryCode: currentLocation.countryCode,
-      lat: currentLocation.lat.toString(),
-      lon: currentLocation.lon.toString(),
+      city: initialLocation?.city ?? "",
+      country: initialLocation?.country ?? baseLocation.country,
+      countryCode: initialLocation?.countryCode ?? baseLocation.countryCode,
+      lat: initialLocation?.lat?.toString() ?? baseLocation.lat.toString(),
+      lon: initialLocation?.lon?.toString() ?? baseLocation.lon.toString(),
     })
+    if (initialLocation?.addressLabel) {
+      setAddress(initialLocation.addressLabel)
+    }
   }
 
   const handleClose = () => {
@@ -100,6 +109,8 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
 
   const updateField = (field: keyof FormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }))
+    setStatus("idle")
+    setCandidate(null)
   }
 
   const inputClassName = "border-white/50 focus-visible:border-white/70 focus-visible:ring-white/30"
@@ -268,8 +279,13 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
 
   const handleSave = () => {
     if (!candidate) return
-    addCustomLocation(candidate)
-    setLocation(candidate)
+    if (onSaveLocation) {
+      onSaveLocation(candidate)
+      setLocation(candidate)
+    } else {
+      addCustomLocation(candidate)
+      setLocation(candidate)
+    }
     handleClose()
   }
 
@@ -287,7 +303,7 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
         className={triggerClassName ?? "h-9 sm:h-8 px-2 sm:px-3 text-xs sm:text-sm text-muted-foreground hover:text-foreground"}
         onClick={handleOpen}
       >
-        <HugeiconsIcon icon={AddCircleIcon} size={16} className="mr-1.5" />
+        {triggerIcon === undefined ? <HugeiconsIcon icon={AddCircleIcon} size={16} className="mr-1.5" /> : triggerIcon}
         <span>{triggerLabel ?? t.ui.addCustomLocation}</span>
       </Button>
 
@@ -338,15 +354,17 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
                       {t.ui.address}
                     </label>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <Input
-                        value={address}
-                        onChange={(event) => {
-                          setAddress(event.target.value)
-                          setAddressLabel(null)
-                        }}
-                        placeholder={t.ui.addressPlaceholder}
-                        className={inputClassName}
-                      />
+                    <Input
+                      value={address}
+                      onChange={(event) => {
+                        setAddress(event.target.value)
+                        setAddressLabel(null)
+                        setStatus("idle")
+                        setCandidate(null)
+                      }}
+                      placeholder={t.ui.addressPlaceholder}
+                      className={inputClassName}
+                    />
                       <Button
                         variant="secondary"
                         onClick={handleAddressSearch}
@@ -432,7 +450,7 @@ export function CustomLocationModal({ triggerLabel, triggerClassName }: CustomLo
                       <span className="font-semibold">{candidate.city}, {candidate.country}</span>
                     </div>
                     <Button onClick={handleSave} className="w-full">
-                      {t.ui.saveLocation}
+                      {isEditMode ? t.ui.updateLocation : t.ui.saveLocation}
                     </Button>
                   </div>
                 )}

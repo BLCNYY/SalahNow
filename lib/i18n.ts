@@ -79,6 +79,9 @@ type TranslationKeys = {
     checkLocation: string
     checkingLocation: string
     saveLocation: string
+    updateLocation: string
+    editCustomLocation: string
+    deleteCustomLocation: string
     customLocationInvalid: string
     customLocationUnavailable: string
     nearbyLocations: string
@@ -94,6 +97,7 @@ type TranslationKeys = {
     addCustomLocationAction: string
     selected: string
     noCustomLocations: string
+    customLocationMenu: string
   }
 }
 
@@ -157,6 +161,9 @@ export const translations: Record<Language, TranslationKeys> = {
       checkLocation: "Check Location",
       checkingLocation: "Checking...",
       saveLocation: "Save Location",
+      updateLocation: "Update Location",
+      editCustomLocation: "Edit",
+      deleteCustomLocation: "Delete",
       customLocationInvalid: "Please enter a valid name and address.",
       customLocationUnavailable: "Prayer times are not available for this location.",
       nearbyLocations: "Nearby available locations",
@@ -172,6 +179,7 @@ export const translations: Record<Language, TranslationKeys> = {
       addCustomLocationAction: "Add Custom Location",
       selected: "Selected",
       noCustomLocations: "No custom locations yet.",
+      customLocationMenu: "Custom location options",
     },
   },
   tr: {
@@ -233,6 +241,9 @@ export const translations: Record<Language, TranslationKeys> = {
       checkLocation: "Konumu Kontrol Et",
       checkingLocation: "Kontrol ediliyor...",
       saveLocation: "Konumu Kaydet",
+      updateLocation: "Konumu Güncelle",
+      editCustomLocation: "Düzenle",
+      deleteCustomLocation: "Sil",
       customLocationInvalid: "Geçerli bir ad ve adres girin.",
       customLocationUnavailable: "Bu konum için namaz vakitleri bulunamadı.",
       nearbyLocations: "Yakındaki kullanılabilir konumlar",
@@ -248,6 +259,7 @@ export const translations: Record<Language, TranslationKeys> = {
       addCustomLocationAction: "Özel Konum Ekle",
       selected: "Seçili",
       noCustomLocations: "Henüz özel konum yok.",
+      customLocationMenu: "Özel konum seçenekleri",
     },
   },
   ar: {
@@ -309,6 +321,9 @@ export const translations: Record<Language, TranslationKeys> = {
       checkLocation: "تحقق من الموقع",
       checkingLocation: "جارٍ التحقق...",
       saveLocation: "حفظ الموقع",
+      updateLocation: "تحديث الموقع",
+      editCustomLocation: "تعديل",
+      deleteCustomLocation: "حذف",
       customLocationInvalid: "يرجى إدخال اسم وعنوان صالحين.",
       customLocationUnavailable: "أوقات الصلاة غير متاحة لهذا الموقع.",
       nearbyLocations: "مواقع قريبة متاحة",
@@ -324,6 +339,7 @@ export const translations: Record<Language, TranslationKeys> = {
       addCustomLocationAction: "إضافة موقع مخصص",
       selected: "محدد",
       noCustomLocations: "لا توجد مواقع مخصصة بعد.",
+      customLocationMenu: "خيارات الموقع المخصص",
     },
   },
   de: {
@@ -385,6 +401,9 @@ export const translations: Record<Language, TranslationKeys> = {
       checkLocation: "Ort prüfen",
       checkingLocation: "Wird geprüft...",
       saveLocation: "Ort speichern",
+      updateLocation: "Ort aktualisieren",
+      editCustomLocation: "Bearbeiten",
+      deleteCustomLocation: "Löschen",
       customLocationInvalid: "Bitte einen gültigen Namen und eine Adresse eingeben.",
       customLocationUnavailable: "Gebetszeiten sind für diesen Ort nicht verfügbar.",
       nearbyLocations: "Nahegelegene verfügbare Orte",
@@ -400,6 +419,7 @@ export const translations: Record<Language, TranslationKeys> = {
       addCustomLocationAction: "Benutzerdefinierten Ort hinzufügen",
       selected: "Ausgewählt",
       noCustomLocations: "Noch keine benutzerdefinierten Orte.",
+      customLocationMenu: "Optionen für benutzerdefinierte Orte",
     },
   },
   fr: {
@@ -461,6 +481,9 @@ export const translations: Record<Language, TranslationKeys> = {
       checkLocation: "Vérifier le lieu",
       checkingLocation: "Vérification...",
       saveLocation: "Enregistrer le lieu",
+      updateLocation: "Mettre à jour le lieu",
+      editCustomLocation: "Modifier",
+      deleteCustomLocation: "Supprimer",
       customLocationInvalid: "Veuillez saisir un nom et une adresse valides.",
       customLocationUnavailable: "Les horaires de prière ne sont pas disponibles pour ce lieu.",
       nearbyLocations: "Lieux disponibles à proximité",
@@ -476,6 +499,7 @@ export const translations: Record<Language, TranslationKeys> = {
       addCustomLocationAction: "Ajouter un lieu personnalisé",
       selected: "Sélectionné",
       noCustomLocations: "Aucun lieu personnalisé pour le moment.",
+      customLocationMenu: "Options du lieu personnalisé",
     },
   },
 }
