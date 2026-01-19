@@ -21,7 +21,9 @@ export interface LocationState {
   setLocation: (location: Location) => void
   addFavorite: (location: Location) => void
   addCustomLocation: (location: Location) => void
+  updateCustomLocation: (previous: Location, next: Location) => void
   removeFavorite: (location: Location) => void
+  removeCustomLocation: (location: Location) => void
   isFavorite: (location: Location) => boolean
   toggleFavorite: (location: Location) => void
 }
@@ -143,6 +145,15 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
     saveStoredLocation(location)
   }, [])
 
+  const isSameCustomLocation = React.useCallback((left: Location, right: Location) => {
+    return (
+      left.city === right.city &&
+      left.countryCode === right.countryCode &&
+      left.lat === right.lat &&
+      left.lon === right.lon
+    )
+  }, [])
+
   const addFavorite = React.useCallback((location: Location) => {
     setFavorites((prev) => {
       const exists = prev.some(
@@ -158,18 +169,25 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
   const addCustomLocation = React.useCallback((location: Location) => {
     setCustomLocations((prev) => {
       const exists = prev.some(
-        (item) =>
-          item.city === location.city &&
-          item.countryCode === location.countryCode &&
-          item.lat === location.lat &&
-          item.lon === location.lon
+        (item) => isSameCustomLocation(item, location)
       )
       if (exists) return prev
       const next = [...prev, location]
       saveCustomLocations(next)
       return next
     })
-  }, [])
+  }, [isSameCustomLocation])
+
+  const updateCustomLocation = React.useCallback((previous: Location, next: Location) => {
+    setCustomLocations((prev) => {
+      const updated = prev.map((item) => (isSameCustomLocation(item, previous) ? next : item))
+      saveCustomLocations(updated)
+      return updated
+    })
+    if (isSameCustomLocation(currentLocation, previous)) {
+      setLocation(next)
+    }
+  }, [currentLocation, isSameCustomLocation, setLocation])
 
   const removeFavorite = React.useCallback((location: Location) => {
     setFavorites((prev) => {
@@ -180,6 +198,17 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
       return newFavorites
     })
   }, [])
+
+  const removeCustomLocation = React.useCallback((location: Location) => {
+    setCustomLocations((prev) => {
+      const next = prev.filter((item) => !isSameCustomLocation(item, location))
+      saveCustomLocations(next)
+      return next
+    })
+    if (isSameCustomLocation(currentLocation, location)) {
+      setLocation(DEFAULT_LOCATION)
+    }
+  }, [currentLocation, isSameCustomLocation, setLocation])
 
   const isFavorite = React.useCallback(
     (location: Location) => {
@@ -210,11 +239,13 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
       setLocation,
       addFavorite,
       addCustomLocation,
+      updateCustomLocation,
       removeFavorite,
+      removeCustomLocation,
       isFavorite,
       toggleFavorite,
     }),
-    [currentLocation, favorites, customLocations, detectedCountryCode, setLocation, addFavorite, addCustomLocation, removeFavorite, isFavorite, toggleFavorite]
+    [currentLocation, favorites, customLocations, detectedCountryCode, setLocation, addFavorite, addCustomLocation, updateCustomLocation, removeFavorite, removeCustomLocation, isFavorite, toggleFavorite]
   )
 
   if (!isHydrated) {
