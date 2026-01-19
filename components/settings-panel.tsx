@@ -19,7 +19,7 @@ export function SettingsPanel() {
   const [candidate, setCandidate] = React.useState<typeof currentLocation | null>(null)
   const [locationError, setLocationError] = React.useState<string | null>(null)
 
-  const isTurkey = currentLocation.countryCode.toUpperCase() === "TR"
+  const isTürkiye = currentLocation.countryCode.toUpperCase() === "TR"
 
   const handleLocationSelect = (location: typeof currentLocation) => {
     setLocation(location)
@@ -137,7 +137,7 @@ export function SettingsPanel() {
         )}
       </div>
 
-      {isTurkey && (
+      {isTürkiye && (
         <div className="flex flex-col gap-3">
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t.ui.advanced}</span>
           <div className="flex flex-col gap-2">
