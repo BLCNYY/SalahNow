@@ -192,21 +192,21 @@ function formatTimeToHHMM(time: string): string {
   return time
 }
 
-function isTurkeyLocation(location: Location): boolean {
+function isTürkiyeLocation(location: Location): boolean {
   if (location.countryCode.toUpperCase() === TURKEY_COUNTRY_CODE) return true
   const country = location.country.trim().toLowerCase()
-  return country === "turkey" || country === "türkiye" || country === "turkiye"
+  return country === "türkiye" || country === "turkiye"
 }
 
 function getDiyanetIlceId(location: Location): string | null {
   if (location.diyanetIlceId) return location.diyanetIlceId
-  if (!isTurkeyLocation(location)) return null
+  if (!isTürkiyeLocation(location)) return null
   const nearest = findNearestLocationByCountryCode(location.lat, location.lon, TURKEY_COUNTRY_CODE)
   return nearest?.diyanetIlceId ?? null
 }
 
 function resolvePrayerSource(location: Location, source: PrayerSource): PrayerSource {
-  return isTurkeyLocation(location) ? source : "mwl"
+  return isTürkiyeLocation(location) ? source : "mwl"
 }
 
 async function fetchFromDiyanet(ilceId: string): Promise<DiyanetPrayerTime[]> {

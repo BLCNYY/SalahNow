@@ -144,7 +144,7 @@ export const translations: Record<Language, TranslationKeys> = {
       advanced: "Advanced",
       prayerSource: "Prayer time source",
       prayerSourceDiyanet: "T.C. Diyanet İşleri Başkanlığı",
-      prayerSourceDiyanetDescription: "Official prayer times for Turkey provided by the Diyanet.",
+      prayerSourceDiyanetDescription: "Official prayer times for Türkiye provided by the Diyanet.",
       prayerSourceMwl: "Muslim World League (AlAdhan API)",
       prayerSourceMwlDescription: "International calculation from the Muslim World League method.",
       addCustomLocation: "Add Custom Location",
