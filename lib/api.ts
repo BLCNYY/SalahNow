@@ -59,6 +59,7 @@ const CACHE_KEY = "salahnow-prayer-cache"
 const MONTHLY_CACHE_KEY = "salahnow-prayer-cache-30d"
 const ALADHAN_BASE_URL = "https://api.aladhan.com/v1"
 const TURKEY_COUNTRY_CODE = "TR"
+const DIYANET_TIME_ZONE = "Europe/Istanbul"
 
 function getCacheKey(location: Location, source: PrayerSource): string {
   return `${location.city}-${location.countryCode}-${source}`
@@ -95,6 +96,24 @@ function parseDiyanetDate(dateStr: string): Date | null {
   const [day, month, year] = dateStr.split(".").map(Number)
   if (!day || !month || !year) return null
   return new Date(year, month - 1, day)
+}
+
+function getTimeZoneDateParts(date: Date, timeZone: string): { year: number; month: number; day: number } {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date)
+  const valueFor = (type: string) => Number(parts.find(part => part.type === type)?.value)
+  const year = valueFor("year")
+  const month = valueFor("month")
+  const day = valueFor("day")
+  return { year, month, day }
+}
+
+function isSameDateParts(date: Date, target: { year: number; month: number; day: number }): boolean {
+  return date.getFullYear() === target.year && date.getMonth() + 1 === target.month && date.getDate() === target.day
 }
 
 interface CachedMonthlyPrayerData {
@@ -220,8 +239,11 @@ async function fetchFromDiyanet(ilceId: string): Promise<DiyanetPrayerTime[]> {
 }
 
 function findTodayPrayerTimes(data: DiyanetPrayerTime[], targetDate: Date): DiyanetPrayerTime | undefined {
-  const targetDateStr = formatDateForDiyanet(targetDate)
-  return data.find(d => d.MiladiTarihKisa === targetDateStr)
+  const targetParts = getTimeZoneDateParts(targetDate, DIYANET_TIME_ZONE)
+  return data.find(entry => {
+    const parsedDate = parseDiyanetDate(entry.MiladiTarihKisa)
+    return parsedDate ? isSameDateParts(parsedDate, targetParts) : false
+  })
 }
 
 async function fetchPrayerTimesFromDiyanet(ilceId: string): Promise<PrayerTimes> {
