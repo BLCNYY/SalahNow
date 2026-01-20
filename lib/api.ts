@@ -92,10 +92,12 @@ function getDateRange(days: number): { startDate: Date; endDate: Date } {
   return { startDate, endDate }
 }
 
-function parseDiyanetDate(dateStr: string): Date | null {
-  const [day, month, year] = dateStr.split(".").map(Number)
+function parseDiyanetDateParts(dateStr: string): { year: number; month: number; day: number } | null {
+  const matches = dateStr.match(/\d+/g)
+  if (!matches || matches.length < 3) return null
+  const [day, month, year] = matches.map(Number)
   if (!day || !month || !year) return null
-  return new Date(year, month - 1, day)
+  return { year, month, day }
 }
 
 function getTimeZoneDateParts(date: Date, timeZone: string): { year: number; month: number; day: number } {
@@ -112,8 +114,8 @@ function getTimeZoneDateParts(date: Date, timeZone: string): { year: number; mon
   return { year, month, day }
 }
 
-function isSameDateParts(date: Date, target: { year: number; month: number; day: number }): boolean {
-  return date.getFullYear() === target.year && date.getMonth() + 1 === target.month && date.getDate() === target.day
+function isSameDateParts(date: { year: number; month: number; day: number }, target: { year: number; month: number; day: number }): boolean {
+  return date.year === target.year && date.month === target.month && date.day === target.day
 }
 
 interface CachedMonthlyPrayerData {
@@ -196,13 +198,6 @@ function setCachedMonthlyData(location: Location, source: PrayerSource, data: Di
   }
 }
 
-function formatDateForDiyanet(date: Date): string {
-  const day = date.getDate().toString().padStart(2, "0")
-  const month = (date.getMonth() + 1).toString().padStart(2, "0")
-  const year = date.getFullYear()
-  return `${day}.${month}.${year}`
-}
-
 function formatTimeToHHMM(time: string): string {
   const parts = time.split(":")
   if (parts.length >= 2) {
@@ -241,7 +236,7 @@ async function fetchFromDiyanet(ilceId: string): Promise<DiyanetPrayerTime[]> {
 function findTodayPrayerTimes(data: DiyanetPrayerTime[], targetDate: Date): DiyanetPrayerTime | undefined {
   const targetParts = getTimeZoneDateParts(targetDate, DIYANET_TIME_ZONE)
   return data.find(entry => {
-    const parsedDate = parseDiyanetDate(entry.MiladiTarihKisa)
+    const parsedDate = parseDiyanetDateParts(entry.MiladiTarihKisa)
     return parsedDate ? isSameDateParts(parsedDate, targetParts) : false
   })
 }
@@ -407,8 +402,9 @@ async function fetchMonthlyFromAlAdhan(location: Location, year: number, month: 
 function filterPrayerTimesToRange(data: DiyanetPrayerTime[], startDate: Date, endDate: Date): DiyanetPrayerTime[] {
   return data
     .map(item => {
-      const parsedDate = parseDiyanetDate(item.MiladiTarihKisa)
-      return parsedDate ? { item, parsedDate } : null
+      const parsedDate = parseDiyanetDateParts(item.MiladiTarihKisa)
+      if (!parsedDate) return null
+      return { item, parsedDate: new Date(parsedDate.year, parsedDate.month - 1, parsedDate.day) }
     })
     .filter((entry): entry is { item: DiyanetPrayerTime; parsedDate: Date } => Boolean(entry))
     .filter(({ parsedDate }) => parsedDate >= startDate && parsedDate <= endDate)
