@@ -20,6 +20,10 @@ const LANGUAGE_LOCALES: Record<string, string> = {
   ar: "ar-SA",
   de: "de-DE",
   fr: "fr-FR",
+  az: "az-AZ",
+  id: "id-ID",
+  it: "it-IT",
+  es: "es-ES",
 }
 
 const HIJRI_MONTHS: Record<string, string[]> = {
@@ -28,6 +32,10 @@ const HIJRI_MONTHS: Record<string, string[]> = {
   ar: ["محرم", "صفر", "ربيع الأول", "ربيع الثاني", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"],
   de: ["Muharram", "Safar", "Rabi' I", "Rabi' II", "Dschumada I", "Dschumada II", "Radschab", "Scha'ban", "Ramadan", "Schawwal", "Dhu l-Qa'da", "Dhu l-Hiddscha"],
   fr: ["Mouharram", "Safar", "Rabia I", "Rabia II", "Joumada I", "Joumada II", "Rajab", "Chaabane", "Ramadan", "Chawwal", "Dhou al qi'da", "Dhou al-hijja"],
+  az: ["Məhərrəm", "Səfər", "Rəbiüləvvəl", "Rəbiülaxır", "Cəmadiyəl-əvvəl", "Cəmadiyəl-axır", "Rəcəb", "Şaban", "Ramazan", "Şəvval", "Zilqədə", "Zilhiccə"],
+  id: ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadan", "Syawal", "Zulkaidah", "Zulhijah"],
+  it: ["Muharram", "Safar", "Rabi' al-awwal", "Rabi' al-thani", "Jumada al-awwal", "Jumada al-thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"],
+  es: ["Muharram", "Safar", "Rabi al-awwal", "Rabi al-thani", "Jumada al-awwal", "Jumada al-thani", "Rayab", "Sha'ban", "Ramadán", "Shawwal", "Dhu al-Qadah", "Dhu al-Hijjah"],
 }
 
 function formatGregorianDate(dateStr: string, language: string): string {
