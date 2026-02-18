@@ -936,6 +936,18 @@ export function getSpanishCountdownText(prayerName: string): string {
   return `Tiempo hasta ${prayerName}`
 }
 
+
+export function getCountdownModeLabel(language: Language, mode: "nextPrayer" | "sehar" | "iftar", prayerName: string): string {
+  if (mode === "sehar") {
+    return language === "tr" ? "Sahura Kalan Süre" : "Time Until Sehar"
+  }
+
+  if (mode === "iftar") {
+    return language === "tr" ? "İftara Kalan Süre" : "Time Until Iftar"
+  }
+
+  return getCountdownText(language, prayerName)
+}
 export function getCountdownText(language: Language, prayerName: string): string {
   switch (language) {
     case "tr":

@@ -3,8 +3,10 @@
 import * as React from "react"
 import { PrayerTimes, PrayerName, PRAYER_NAMES, Location } from "@/lib/types"
 import { fetchPrayerTimes, fetchTomorrowFajr } from "@/lib/api"
-import { getCurrentPrayerInfo, formatCountdown } from "@/lib/prayer-utils"
+import { getCurrentPrayerInfo, formatCountdown, getTimeZoneDate, timeStringToDate } from "@/lib/prayer-utils"
 import { useSettings } from "@/lib/settings-store"
+
+export type CountdownMode = "nextPrayer" | "sehar" | "iftar"
 
 interface PrayerListItem {
   name: PrayerName
@@ -26,7 +28,7 @@ interface PrayerTimesState {
   showLocalTime: boolean
 }
 
-export function usePrayerTimes(location: Location) {
+export function usePrayerTimes(location: Location, countdownMode: CountdownMode = "nextPrayer") {
   const { prayerSource } = useSettings()
   const [prayerTimes, setPrayerTimes] = React.useState<PrayerTimes | null>(null)
   const [tomorrowFajr, setTomorrowFajr] = React.useState<string | null>(null)
@@ -87,9 +89,35 @@ export function usePrayerTimes(location: Location) {
   React.useEffect(() => {
     if (!prayerTimes) return
 
+    const currentPrayerTimes = prayerTimes
+
+    function getTimeUntilNextTarget(prayerTime: string, now: Date): number {
+      const targetToday = timeStringToDate(prayerTime, now)
+      if (targetToday.getTime() >= now.getTime()) {
+        return targetToday.getTime() - now.getTime()
+      }
+
+      const targetTomorrow = new Date(targetToday)
+      targetTomorrow.setDate(targetTomorrow.getDate() + 1)
+      return targetTomorrow.getTime() - now.getTime()
+    }
+
     function updateCountdown() {
-      const info = getCurrentPrayerInfo(prayerTimes!, tomorrowFajr || undefined, timeZone || undefined)
-      setCountdown(formatCountdown(info.timeUntilNext))
+      const info = getCurrentPrayerInfo(currentPrayerTimes, tomorrowFajr || undefined, timeZone || undefined)
+      const now = timeZone ? getTimeZoneDate(timeZone) : new Date()
+
+      const countdownTargetTime =
+        countdownMode === "sehar"
+          ? currentPrayerTimes.Fajr
+          : countdownMode === "iftar"
+            ? currentPrayerTimes.Maghrib
+            : null
+
+      const countdownMs = countdownTargetTime
+        ? getTimeUntilNextTarget(countdownTargetTime, now)
+        : info.timeUntilNext
+
+      setCountdown(formatCountdown(countdownMs))
       setCurrentPrayer(info.currentPrayer)
       setNextPrayer(info.nextPrayer)
 
@@ -97,7 +125,7 @@ export function usePrayerTimes(location: Location) {
       
       setPrayerList(PRAYER_NAMES.map((name) => ({
         name,
-        time: prayerTimes![name],
+        time: currentPrayerTimes[name],
         isActive: !isSunriseWindow && info.currentPrayer === name,
       })))
 
@@ -114,7 +142,7 @@ export function usePrayerTimes(location: Location) {
     const interval = setInterval(updateCountdown, 1000)
 
     return () => clearInterval(interval)
-  }, [prayerTimes, tomorrowFajr, timeZone, userTimeZone, formatLocalTime])
+  }, [prayerTimes, tomorrowFajr, timeZone, userTimeZone, formatLocalTime, countdownMode])
 
   return {
     prayerTimes,

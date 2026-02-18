@@ -20,13 +20,14 @@ import { cn } from "@/lib/utils"
 import { LocationProvider, useLocation } from "@/lib/store"
 import { LanguageProvider, useLanguage } from "@/lib/language-store"
 import { PrayerName } from "@/lib/types"
-import { getCountdownText } from "@/lib/i18n"
-import { usePrayerTimes } from "@/hooks/use-prayer-times"
+import { getCountdownModeLabel } from "@/lib/i18n"
+import { CountdownMode, usePrayerTimes } from "@/hooks/use-prayer-times"
 import { SettingsProvider } from "@/lib/settings-store"
 
 function PrayerTimesDisplay() {
   const { currentLocation, isFavorite, toggleFavorite, detectedCountryCode } = useLocation()
-  const { loading, error, countdown, nextPrayer, prayerList, localTime, showLocalTime } = usePrayerTimes(currentLocation)
+  const [countdownMode, setCountdownMode] = React.useState<CountdownMode>("nextPrayer")
+  const { loading, error, countdown, nextPrayer, prayerList, localTime, showLocalTime } = usePrayerTimes(currentLocation, countdownMode)
   const { t, initializeFromCountry, language } = useLanguage()
 
   React.useEffect(() => {
@@ -37,8 +38,14 @@ function PrayerTimesDisplay() {
 
   const translatedNextPrayer = t.prayerNames[nextPrayer as PrayerName] || nextPrayer
   
-  const countdownText = React.useMemo(() => {
-    return getCountdownText(language, translatedNextPrayer)
+  const countdownOptions = React.useMemo(() => {
+    const locale = language === "tr" ? "tr-TR" : undefined
+
+    return [
+      { mode: "nextPrayer" as CountdownMode, label: getCountdownModeLabel(language, "nextPrayer", translatedNextPrayer).toLocaleUpperCase(locale) },
+      { mode: "sehar" as CountdownMode, label: getCountdownModeLabel(language, "sehar", translatedNextPrayer).toLocaleUpperCase(locale) },
+      { mode: "iftar" as CountdownMode, label: getCountdownModeLabel(language, "iftar", translatedNextPrayer).toLocaleUpperCase(locale) },
+    ]
   }, [language, translatedNextPrayer])
 
   const currentIsFavorite = isFavorite(currentLocation)
@@ -112,8 +119,20 @@ function PrayerTimesDisplay() {
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 className="text-center space-y-2 sm:space-y-1 w-full px-4"
               >
-                <div className="text-muted-foreground text-xl sm:text-sm tracking-widest uppercase">
-                  <span>{countdownText}</span>
+                <div className="flex items-center justify-center gap-2 sm:gap-3 text-muted-foreground text-sm sm:text-xs tracking-widest uppercase flex-wrap">
+                  {countdownOptions.map((option) => (
+                    <button
+                      key={option.mode}
+                      type="button"
+                      className={cn(
+                        "transition-colors px-1 py-0.5 rounded-sm",
+                        countdownMode === option.mode ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                      )}
+                      onClick={() => setCountdownMode(option.mode)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
                 </div>
                 {showLocalTime && localTime ? (
                   <div className="text-muted-foreground text-xs sm:text-[10px] tracking-[0.2em] uppercase">
