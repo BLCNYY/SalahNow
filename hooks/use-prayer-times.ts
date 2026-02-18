@@ -89,6 +89,8 @@ export function usePrayerTimes(location: Location, countdownMode: CountdownMode 
   React.useEffect(() => {
     if (!prayerTimes) return
 
+    const currentPrayerTimes = prayerTimes
+
     function getTimeUntilNextTarget(time: string, now: Date): number {
       const targetToday = timeStringToDate(time, now)
       if (targetToday.getTime() >= now.getTime()) {
@@ -101,14 +103,14 @@ export function usePrayerTimes(location: Location, countdownMode: CountdownMode 
     }
 
     function updateCountdown() {
-      const info = getCurrentPrayerInfo(prayerTimes, tomorrowFajr || undefined, timeZone || undefined)
+      const info = getCurrentPrayerInfo(currentPrayerTimes, tomorrowFajr || undefined, timeZone || undefined)
       const now = timeZone ? getTimeZoneDate(timeZone) : new Date()
 
       const countdownMs =
         countdownMode === "sehar"
-          ? getTimeUntilNextTarget(prayerTimes.Fajr, now)
+          ? getTimeUntilNextTarget(currentPrayerTimes.Fajr, now)
           : countdownMode === "iftar"
-            ? getTimeUntilNextTarget(prayerTimes.Maghrib, now)
+            ? getTimeUntilNextTarget(currentPrayerTimes.Maghrib, now)
             : info.timeUntilNext
 
       setCountdown(formatCountdown(countdownMs))
@@ -119,7 +121,7 @@ export function usePrayerTimes(location: Location, countdownMode: CountdownMode 
       
       setPrayerList(PRAYER_NAMES.map((name) => ({
         name,
-        time: prayerTimes![name],
+        time: currentPrayerTimes[name],
         isActive: !isSunriseWindow && info.currentPrayer === name,
       })))
 
