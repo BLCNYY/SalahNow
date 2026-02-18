@@ -91,8 +91,8 @@ export function usePrayerTimes(location: Location, countdownMode: CountdownMode 
 
     const currentPrayerTimes = prayerTimes
 
-    function getTimeUntilNextTarget(time: string, now: Date): number {
-      const targetToday = timeStringToDate(time, now)
+    function getTimeUntilNextTarget(prayerTime: string, now: Date): number {
+      const targetToday = timeStringToDate(prayerTime, now)
       if (targetToday.getTime() >= now.getTime()) {
         return targetToday.getTime() - now.getTime()
       }
@@ -106,12 +106,16 @@ export function usePrayerTimes(location: Location, countdownMode: CountdownMode 
       const info = getCurrentPrayerInfo(currentPrayerTimes, tomorrowFajr || undefined, timeZone || undefined)
       const now = timeZone ? getTimeZoneDate(timeZone) : new Date()
 
-      const countdownMs =
+      const countdownTargetTime =
         countdownMode === "sehar"
-          ? getTimeUntilNextTarget(currentPrayerTimes.Fajr, now)
+          ? currentPrayerTimes.Fajr
           : countdownMode === "iftar"
-            ? getTimeUntilNextTarget(currentPrayerTimes.Maghrib, now)
-            : info.timeUntilNext
+            ? currentPrayerTimes.Maghrib
+            : null
+
+      const countdownMs = countdownTargetTime
+        ? getTimeUntilNextTarget(countdownTargetTime, now)
+        : info.timeUntilNext
 
       setCountdown(formatCountdown(countdownMs))
       setCurrentPrayer(info.currentPrayer)
