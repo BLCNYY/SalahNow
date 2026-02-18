@@ -38,11 +38,15 @@ function PrayerTimesDisplay() {
 
   const translatedNextPrayer = t.prayerNames[nextPrayer as PrayerName] || nextPrayer
   
-  const countdownOptions = React.useMemo(() => ([
-    { mode: "nextPrayer" as CountdownMode, label: getCountdownModeLabel(language, "nextPrayer", translatedNextPrayer) },
-    { mode: "sehar" as CountdownMode, label: getCountdownModeLabel(language, "sehar", translatedNextPrayer) },
-    { mode: "iftar" as CountdownMode, label: getCountdownModeLabel(language, "iftar", translatedNextPrayer) },
-  ]), [language, translatedNextPrayer])
+  const countdownOptions = React.useMemo(() => {
+    const locale = language === "tr" ? "tr-TR" : undefined
+
+    return [
+      { mode: "nextPrayer" as CountdownMode, label: getCountdownModeLabel(language, "nextPrayer", translatedNextPrayer).toLocaleUpperCase(locale) },
+      { mode: "sehar" as CountdownMode, label: getCountdownModeLabel(language, "sehar", translatedNextPrayer).toLocaleUpperCase(locale) },
+      { mode: "iftar" as CountdownMode, label: getCountdownModeLabel(language, "iftar", translatedNextPrayer).toLocaleUpperCase(locale) },
+    ]
+  }, [language, translatedNextPrayer])
 
   const currentIsFavorite = isFavorite(currentLocation)
 
