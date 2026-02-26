@@ -49,6 +49,7 @@ function PrayerTimesDisplay() {
   }, [language, translatedNextPrayer])
 
   const currentIsFavorite = isFavorite(currentLocation)
+  const prayerNameLocale = language === "tr" ? "tr-TR" : undefined
 
   return (
     <>
@@ -158,7 +159,10 @@ function PrayerTimesDisplay() {
             className="w-full max-w-4xl mx-auto"
           >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-12 md:gap-16 pb-2">
-              {prayerList.map((prayer) => (
+              {prayerList.map((prayer) => {
+                const prayerLabel = (t.prayerNames[prayer.name as PrayerName] || prayer.name).toLocaleUpperCase(prayerNameLocale)
+
+                return (
                 <div 
                   key={prayer.name} 
                   className={cn(
@@ -174,10 +178,10 @@ function PrayerTimesDisplay() {
                       />
                     )}
                     <span className={cn(
-                      "text-xl sm:text-xs tracking-wide sm:tracking-widest uppercase font-semibold sm:font-medium",
+                      "text-xl sm:text-xs tracking-wide sm:tracking-widest font-semibold sm:font-medium",
                       prayer.isActive ? "text-primary" : "text-foreground/50"
                     )}>
-                      {t.prayerNames[prayer.name as PrayerName] || prayer.name}
+                      {prayerLabel}
                     </span>
                     {prayer.isActive && (
                       <motion.div 
@@ -193,7 +197,7 @@ function PrayerTimesDisplay() {
                     {prayer.time}
                   </span>
                 </div>
-              ))}
+              )})}
             </div>
           </motion.div>
         </div>
