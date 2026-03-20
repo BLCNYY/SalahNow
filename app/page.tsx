@@ -6,6 +6,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { StarIcon, Loading03Icon } from "@hugeicons/core-free-icons"
 
 import { AppSidebar } from "@/components/app-sidebar"
+import { EidAlFitrPopup } from "@/components/eid-al-fitr-popup"
 import {
   SidebarInset,
   SidebarProvider,
@@ -20,14 +21,13 @@ import { cn } from "@/lib/utils"
 import { LocationProvider, useLocation } from "@/lib/store"
 import { LanguageProvider, useLanguage } from "@/lib/language-store"
 import { PrayerName } from "@/lib/types"
-import { getCountdownModeLabel } from "@/lib/i18n"
-import { CountdownMode, usePrayerTimes } from "@/hooks/use-prayer-times"
+import { getCountdownText } from "@/lib/i18n"
+import { usePrayerTimes } from "@/hooks/use-prayer-times"
 import { SettingsProvider } from "@/lib/settings-store"
 
 function PrayerTimesDisplay() {
   const { currentLocation, isFavorite, toggleFavorite, detectedCountryCode } = useLocation()
-  const [countdownMode, setCountdownMode] = React.useState<CountdownMode>("nextPrayer")
-  const { loading, error, countdown, nextPrayer, prayerList, localTime, showLocalTime } = usePrayerTimes(currentLocation, countdownMode)
+  const { loading, error, countdown, nextPrayer, prayerList, localTime, showLocalTime } = usePrayerTimes(currentLocation)
   const { t, initializeFromCountry, language } = useLanguage()
 
   React.useEffect(() => {
@@ -37,22 +37,14 @@ function PrayerTimesDisplay() {
   }, [detectedCountryCode, initializeFromCountry])
 
   const translatedNextPrayer = t.prayerNames[nextPrayer as PrayerName] || nextPrayer
-  
-  const countdownOptions = React.useMemo(() => {
-    const locale = language === "tr" ? "tr-TR" : undefined
-
-    return [
-      { mode: "nextPrayer" as CountdownMode, label: getCountdownModeLabel(language, "nextPrayer", translatedNextPrayer).toLocaleUpperCase(locale) },
-      { mode: "sehar" as CountdownMode, label: getCountdownModeLabel(language, "sehar", translatedNextPrayer).toLocaleUpperCase(locale) },
-      { mode: "iftar" as CountdownMode, label: getCountdownModeLabel(language, "iftar", translatedNextPrayer).toLocaleUpperCase(locale) },
-    ]
-  }, [language, translatedNextPrayer])
-
   const currentIsFavorite = isFavorite(currentLocation)
   const prayerNameLocale = language === "tr" ? "tr-TR" : undefined
+  const countdownLabel = getCountdownText(language, translatedNextPrayer).toLocaleUpperCase(prayerNameLocale)
 
   return (
     <>
+      <EidAlFitrPopup />
+
       <header className="flex h-14 sm:h-16 shrink-0 items-center gap-2 border-b border-transparent px-3 sm:px-4 safe-top transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 w-full z-10">
         <div className="flex items-center gap-1 sm:gap-2">
           <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors touch-manipulation" />
@@ -120,20 +112,8 @@ function PrayerTimesDisplay() {
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 className="text-center space-y-2 sm:space-y-1 w-full px-4"
               >
-                <div className="flex items-center justify-center gap-2 sm:gap-3 text-muted-foreground text-sm sm:text-xs tracking-widest uppercase flex-wrap">
-                  {countdownOptions.map((option) => (
-                    <button
-                      key={option.mode}
-                      type="button"
-                      className={cn(
-                        "transition-colors px-1 py-0.5 rounded-sm",
-                        countdownMode === option.mode ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                      )}
-                      onClick={() => setCountdownMode(option.mode)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
+                <div className="text-muted-foreground text-sm sm:text-xs tracking-widest uppercase">
+                  {countdownLabel}
                 </div>
                 {showLocalTime && localTime ? (
                   <div className="text-muted-foreground text-xs sm:text-[10px] tracking-[0.2em] uppercase">
