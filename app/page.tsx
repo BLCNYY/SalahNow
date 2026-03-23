@@ -6,7 +6,6 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { StarIcon, Loading03Icon } from "@hugeicons/core-free-icons"
 
 import { AppSidebar } from "@/components/app-sidebar"
-import { EidAlFitrPopup } from "@/components/eid-al-fitr-popup"
 import {
   SidebarInset,
   SidebarProvider,
@@ -43,8 +42,6 @@ function PrayerTimesDisplay() {
 
   return (
     <>
-      <EidAlFitrPopup />
-
       <header className="flex h-14 sm:h-16 shrink-0 items-center gap-2 border-b border-transparent px-3 sm:px-4 safe-top transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 w-full z-10">
         <div className="flex items-center gap-1 sm:gap-2">
           <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors touch-manipulation" />
